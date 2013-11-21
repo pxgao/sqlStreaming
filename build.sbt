@@ -8,4 +8,6 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % "0.9.0-incubating-SN
 
 libraryDependencies += "org.apache.spark" %% "spark-streaming" % "0.9.0-incubating-SNAPSHOT"
 
+libraryDependencies += "org.slf4j" % "slf4j-log4j12" % "1.7.2"
+
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"

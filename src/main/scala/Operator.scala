@@ -517,7 +517,7 @@ class OutputOperator(parentOp : Operator,
   }
 
   override def execute(exec : Execution) : Array[RDD[IndexedSeq[Any]]] = {
-    val rdd = this.parentCtx.ssc.sparkContext.union( parentOperators.head.execute(exec) )
+    val rdd = this.parentCtx.ssc.sparkContext.union( parentOperators.head.execute(exec) ).coalesce(2, false)
 
     Array(
       if(isSelectAll)
@@ -601,10 +601,10 @@ class InnerJoinOperator(parentOp1 : Operator,
       }
     )).toMap
 
-    leftShuffleCache.foreach(tp => {
-      if(!leftShuffleCache.contains(tp._1))
-        tp._2.unpersist(false)
-    })
+//    leftShuffleCache.foreach(tp => {
+//      if(!leftShuffleCache.contains(tp._1))
+//        tp._2.unpersist(false)
+//    })
 
     leftShuffleMap.foreach(_._2.persist(this.parentCtx.defaultStorageLevel))
     leftShuffleCache = leftShuffleMap
@@ -625,10 +625,10 @@ class InnerJoinOperator(parentOp1 : Operator,
       }
       )).toMap
 
-    rightShuffleCache.foreach(tp => {
-      if(!rightShuffleCache.contains(tp._1))
-        tp._2.unpersist(false)
-    })
+//    rightShuffleCache.foreach(tp => {
+//      if(!rightShuffleCache.contains(tp._1))
+//        tp._2.unpersist(false)
+//    })
 
     rightShuffleMap.foreach(_._2.persist(this.parentCtx.defaultStorageLevel))
     rightShuffleCache = rightShuffleMap
@@ -659,10 +659,10 @@ class InnerJoinOperator(parentOp1 : Operator,
 
     if(this.parentCtx.args.contains("-incre")){
       result.foreach(tp => tp._2.persist(this.parentCtx.defaultStorageLevel))
-      cached.foreach(tp => {
-        if(!result.contains(tp._1))
-          tp._2.unpersist(false)
-      })
+//      cached.foreach(tp => {
+//        if(!result.contains(tp._1))
+//          tp._2.unpersist(false)
+//      })
       cached = result
     }
     result.values.toArray

@@ -59,6 +59,8 @@ class SqlSparkStreamingContext(master: String,
 
         rdd.persist(this.defaultStorageLevel)
 
+
+
         if (!recentBatchOfInputStreams.contains(time))
           recentBatchOfInputStreams += time -> scala.collection.mutable.Map[String, RDD[String]]()
 
@@ -87,7 +89,7 @@ class SqlSparkStreamingContext(master: String,
         case (time:Time, rdds :scala.collection.mutable.Map[String, RDD[String]]) =>
         {
           processBatch(time,rdds)
-          rdds.values.foreach(_.unpersist(false))
+          //rdds.values.foreach(_.unpersist(false))
         }
       }
     }
@@ -113,7 +115,7 @@ class SqlSparkStreamingContext(master: String,
     val exec = new Execution(time,rdds)
 
 
-    operatorGraph.execute(SqlHelper.printRDD,exec)
+    operatorGraph.execute(rdd => println(rdd.count),exec)
 
     val timeUsed = (System.nanoTime() - starttime)/1000000.0
 
