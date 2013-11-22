@@ -6,6 +6,7 @@ import scala.collection.mutable
 import org.apache.spark.SparkContext._
 import org.apache.spark._
 import org.apache.spark.broadcast.Broadcast
+import scala.collection.mutable.ArrayBuffer
 
 /**
  * Created with IntelliJ IDEA.
@@ -561,8 +562,8 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
   var cached = Map[(RDD[IndexedSeq[Any]], RDD[IndexedSeq[Any]]), RDD[IndexedSeq[Any]]]()
-  var leftShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[(IndexedSeq[Any], IndexedSeq[Any])]]()
-  var rightShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[(IndexedSeq[Any], IndexedSeq[Any])]]()
+  var leftShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
+  var rightShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
 
   var selectivity : Double = 1.0
 
@@ -592,25 +593,58 @@ class InnerJoinOperator(parentOp1 : Operator,
   }
 
 
+  val convertToHashMap = (iter : Iterator[(IndexedSeq[Any],IndexedSeq[Any])]) => {
+    {
+
+      val multiMap = new mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]
+
+      iter.foreach(kvp =>
+        if(multiMap.contains(kvp._1))
+          multiMap(kvp._1).append(kvp._2)
+        else
+          multiMap += kvp._1 -> ArrayBuffer(kvp._2)
+      )
+
+      new Iterator[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]](){
+        val content = multiMap
+        var _hasNext = true
+        override def hasNext() = _hasNext
+        override def next() = {
+          if(_hasNext){
+            _hasNext = false
+            content
+          }else
+            throw new NoSuchElementException
+        }
+
+      }
+    }
+  }
+
+
   override def execute(exec : Execution) : Array[RDD[IndexedSeq[Any]]] = {
+
 
 
 
     val leftParentResult = parentOperators(0).execute(exec)
     val rightParentResult = parentOperators(1).execute(exec)
 
-    val leftShuffleMap = leftParentResult.map(result => (
-      result,
-      if(leftShuffleCache.contains(result)){
-        leftShuffleCache(result)
-      }
-      else{
-        val localJoinCondition = this.localJoinCondition
-        result.map(
-          record => (localJoinCondition.value.map(tp => record(tp._1)),record))
-          .partitionBy(partitioner)
-      }
-    )).toMap
+    val leftShuffleMap = leftParentResult.map(result => {
+      val shuffled =
+        if(leftShuffleCache.contains(result)){
+          leftShuffleCache(result)
+        }
+        else{
+          val localJoinCondition = this.localJoinCondition
+          val convertToHashMap = this.convertToHashMap
+          result.map(
+            record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+            .partitionBy(partitioner)
+            .mapPartitions(iter => convertToHashMap(iter) , true)
+        }
+      (result, shuffled)
+    }).toMap
 
 //    leftShuffleCache.foreach(tp => {
 //      if(!leftShuffleCache.contains(tp._1))
@@ -623,18 +657,21 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
 
-    val rightShuffleMap = rightParentResult.map(result => (
-      result,
-      if(rightShuffleCache.contains(result)){
-        rightShuffleCache(result)
-      }
-      else{
-        val localJoinCondition = this.localJoinCondition
-        result.map(
-          record => (localJoinCondition.value.map(tp => record(tp._1)),record))
-          .partitionBy(partitioner)
-      }
-      )).toMap
+    val rightShuffleMap = rightParentResult.map(result => {
+      val shuffled =
+        if(rightShuffleCache.contains(result)){
+          rightShuffleCache(result)
+        }
+        else{
+          val localJoinCondition = this.localJoinCondition
+          val convertToHashMap = this.convertToHashMap
+          result.map(
+            record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+            .partitionBy(partitioner)
+            .mapPartitions(iter => convertToHashMap(iter) , true)
+        }
+      (result, shuffled)
+    }).toMap
 
 //    rightShuffleCache.foreach(tp => {
 //      if(!rightShuffleCache.contains(tp._1))
@@ -662,7 +699,9 @@ class InnerJoinOperator(parentOp1 : Operator,
         {
           val leftShuffled = leftShuffleMap(leftRdd)
           val rightShuffled = rightShuffleMap(rightRdd)
-          join(leftShuffled, rightShuffled)
+
+
+          hashedJoin(leftShuffled, rightShuffled)
         }
       result += (leftRdd, rightRdd) -> res
     }
@@ -676,7 +715,26 @@ class InnerJoinOperator(parentOp1 : Operator,
 //      })
       cached = result
     }
+
+
     result.values.toArray
+
+  }
+
+  def hashedJoin(left : RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]],
+                 right : RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]) = {
+    left.zipPartitions(right)((leftIter, rightIter) => {
+      val leftTable = leftIter.next
+      val rightTable = rightIter.next
+
+      leftTable.flatMap(kvp => {
+        if(rightTable.contains(kvp._1)){
+          kvp._2.flatMap(leftRecord => rightTable(kvp._1).map(rightRecord => leftRecord ++ rightRecord))
+        }else{
+          Seq()
+        }
+      }).iterator
+    })
   }
 
 

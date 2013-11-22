@@ -53,25 +53,25 @@ class SqlSparkStreamingContext(master: String,
     operatorGraph.groupInnerJoin()
 
     inputStreams.foreach(kvp => {
-      val name = kvp._1
-      val stream = kvp._2
-      stream.foreach((rdd,time) => {
-
-        rdd.persist(this.defaultStorageLevel)
-
-
-
-        if (!recentBatchOfInputStreams.contains(time))
-          recentBatchOfInputStreams += time -> scala.collection.mutable.Map[String, RDD[String]]()
-
-        recentBatchOfInputStreams(time) += name -> rdd
-
-        if(recentBatchOfInputStreams(time).keySet == inputStreams.keys){
-          processRDDActor ! (time,recentBatchOfInputStreams(time))
-          //processBatch(time, recentBatchOfInputStreams(time))
-          recentBatchOfInputStreams - time
-        }
-      })
+      kvp._2.count().print()
+//      val name = kvp._1
+//      val stream = kvp._2
+//      stream.persist()
+//      stream.foreach((rdd,time) => {
+//
+//
+//
+//        if (!recentBatchOfInputStreams.contains(time))
+//          recentBatchOfInputStreams += time -> scala.collection.mutable.Map[String, RDD[String]]()
+//
+//        recentBatchOfInputStreams(time) += name -> rdd
+//
+//        if(recentBatchOfInputStreams(time).keySet == inputStreams.keys){
+//          processRDDActor ! (time,recentBatchOfInputStreams(time))
+//          //processBatch(time, recentBatchOfInputStreams(time))
+//          recentBatchOfInputStreams - time
+//        }
+//      })
     })
     ssc.start()
   }
@@ -115,7 +115,8 @@ class SqlSparkStreamingContext(master: String,
     val exec = new Execution(time,rdds)
 
 
-    operatorGraph.execute(rdd =>  SqlHelper.printRDD(rdd),exec)
+    //operatorGraph.execute(rdd =>  SqlHelper.printRDD(rdd),exec)
+
 
     val timeUsed = (System.nanoTime() - starttime)/1000000.0
 
