@@ -11,3 +11,9 @@ libraryDependencies += "org.apache.spark" %% "spark-streaming" % "0.9.0-incubati
 libraryDependencies += "org.slf4j" % "slf4j-log4j12" % "1.7.2"
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
+
+javaOptions ++= Seq(
+  "-Dsun.io.serialization.extendedDebugInfo=true"
+)
+
+

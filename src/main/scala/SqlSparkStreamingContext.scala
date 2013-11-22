@@ -50,7 +50,7 @@ class SqlSparkStreamingContext(master: String,
 
 
   def start(){
-    operatorGraph.groupInnerJoin();
+    operatorGraph.groupInnerJoin()
 
     inputStreams.foreach(kvp => {
       val name = kvp._1
@@ -115,7 +115,7 @@ class SqlSparkStreamingContext(master: String,
     val exec = new Execution(time,rdds)
 
 
-    operatorGraph.execute(rdd => println(rdd.count),exec)
+    operatorGraph.execute(rdd =>  SqlHelper.printRDD(rdd),exec)
 
     val timeUsed = (System.nanoTime() - starttime)/1000000.0
 

@@ -2,7 +2,7 @@ package main.scala
 
 
 import org.apache.spark.streaming.Seconds
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming._
 import org.apache.spark.streaming.StreamingContext._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext._
@@ -50,12 +50,12 @@ object NetworkTest {
     val y = ssc.socketTextStream(args(1), 9998).map(_.split(",")).map(arr => (arr(0).toInt,arr(1).toInt))
     //val z = ssc.socketTextStream(args(1), 9997)
 
-    val xx = x.window(Seconds(10))
+    val xx = x.groupByKeyAndWindow(Seconds(10))
     val yy = y.window(Seconds(10))
 
     val gb = x.combineByKey[Int](s => 1, (c,s) => (c+1), (c1,c2) => (c1+c2), new HashPartitioner(ssc.sparkContext.defaultParallelism))
 
-    gb.print()
+    xx.print()
 
     //z.window(Seconds(1000)).count.print()
 

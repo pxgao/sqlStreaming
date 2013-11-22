@@ -4,7 +4,7 @@ import org.apache.spark.streaming._
 import org.apache.spark.rdd._
 import scala.collection.mutable
 import org.apache.spark.SparkContext._
-import org.apache.spark.HashPartitioner
+import org.apache.spark._
 import org.apache.spark.broadcast.Broadcast
 
 /**
@@ -374,13 +374,22 @@ class GroupByOperator(parentOp : Operator,
 
     //val unioned = this.parentCtx.ssc.sc.union[(IndexedSeq[Any],IndexedSeq[Any])](rddPair.values.toSeq)
     //val result = Array[RDD[IndexedSeq[Any]]](mergeBatch(unioned))
+
+
     val unioned = rddPair.values
       .map(_.mapValues(Seq(_)))
       .reduce((r1, r2) => r1.cogroup(r2).mapValues(tp => tp._1.flatten ++ tp._2.flatten))
-      .mapValues(records => finalProcessing(records.reduce((x,y) => mergeCombiners(x,y,localValueFunctions)), localValueFunctions))
+
+    val grouped = unioned.mapValues(records => finalProcessing(records.reduce((x,y) => mergeCombiners(x,y,localValueFunctions)), localValueFunctions))
+
+//    val unioned = new PartitionAwareUnionRDD(this.parentCtx.ssc.sparkContext, rddPair.values.toSeq)
+//    //val unioned = this.parentCtx.ssc.sparkContext.union(rddPair.values.toSeq)
+//    println("original num part:" + rddPair.values.head.partitions.length + " union num part:" + unioned.partitions.length)
+//    val grouped = unioned.reduceByKey((x,y) => mergeCombiners(x,y,localValueFunctions))
+//      .mapValues(records => finalProcessing(records, localValueFunctions))
 
 
-    val result = Array(unioned.map(tp => tp._1 ++ tp._2))
+    val result = Array(grouped.map(tp => tp._1 ++ tp._2))
 
     if(this.parentCtx.args.contains("-incre")){
       cached.foreach(kvp =>
@@ -517,7 +526,9 @@ class OutputOperator(parentOp : Operator,
   }
 
   override def execute(exec : Execution) : Array[RDD[IndexedSeq[Any]]] = {
-    val rdd = this.parentCtx.ssc.sparkContext.union( parentOperators.head.execute(exec) ).coalesce(2, false)
+    val rdd = this.parentCtx.ssc.sparkContext.union( parentOperators.head.execute(exec) )
+      .coalesce( this.parentCtx.ssc.sparkContext.defaultParallelism , false)
+
 
     Array(
       if(isSelectAll)
@@ -726,4 +737,38 @@ class InnerJoinOperator(parentOp1 : Operator,
   def getJoinCondition = joinCondition
 
   override def toString = super.toString + joinCondition + " Sel:" + selectivity
+}
+
+
+
+class PartitionAwareUnionRDDPartition(val idx: Int, val partitions: Array[Partition])
+  extends Partition {
+  override val index = idx
+  override def hashCode(): Int = idx
+}
+
+
+class PartitionAwareUnionRDD[T: ClassManifest](
+                                                sc: SparkContext,
+                                                var rdds: Seq[RDD[T]])
+  extends RDD[T](sc, rdds.map(x => new OneToOneDependency(x))) {
+  require(rdds.length > 0)
+  require(rdds.flatMap(_.partitioner).distinct.length == 1, "Parent RDDs have different partitioners")
+
+  override val partitioner = rdds.head.partitioner
+
+  override def getPartitions: Array[Partition] = {
+    val numPartitions = rdds.head.partitions.length
+    (0 until numPartitions).map(index => {
+      val parentPartitions = rdds.map(_.partitions(index)).toArray
+      new PartitionAwareUnionRDDPartition(index, parentPartitions)
+    }).toArray
+  }
+
+  override def compute(s: Partition, context: TaskContext): Iterator[T] = {
+    val parentPartitions = s.asInstanceOf[PartitionAwareUnionRDDPartition].partitions
+    rdds.zip(parentPartitions).iterator.flatMap {
+      case (rdd, p) => rdd.iterator(p, context)
+    }
+  }
 }
