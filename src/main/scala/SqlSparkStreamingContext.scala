@@ -5,6 +5,7 @@ import org.apache.spark.rdd.RDD
 import scala.actors.Actor._
 import java.io.{File, PrintWriter}
 import scala.Tuple2
+import org.apache.spark.streaming.dstream.ConstantInputDStream
 
 
 /**
@@ -45,7 +46,8 @@ class SqlSparkStreamingContext(master: String,
   }
 
   def socketTextStream(ip : String, port : Int, name: String) {
-    inputStreams += name -> ssc.socketTextStream(ip, port)
+    //inputStreams += name -> ssc.socketTextStream(ip, port)
+    inputStreams += name -> new ConstantInputDStream[String](ssc, ssc.sparkContext.makeRDD(1 to 1000, 5).map(x => "" + (scala.util.Random.nextGaussian() * 100) + "," + 1 ))
   }
 
 
@@ -53,25 +55,25 @@ class SqlSparkStreamingContext(master: String,
     operatorGraph.groupInnerJoin()
 
     inputStreams.foreach(kvp => {
-      kvp._2.count().print()
-//      val name = kvp._1
-//      val stream = kvp._2
-//      stream.persist()
-//      stream.foreach((rdd,time) => {
-//
-//
-//
-//        if (!recentBatchOfInputStreams.contains(time))
-//          recentBatchOfInputStreams += time -> scala.collection.mutable.Map[String, RDD[String]]()
-//
-//        recentBatchOfInputStreams(time) += name -> rdd
-//
-//        if(recentBatchOfInputStreams(time).keySet == inputStreams.keys){
-//          processRDDActor ! (time,recentBatchOfInputStreams(time))
-//          //processBatch(time, recentBatchOfInputStreams(time))
-//          recentBatchOfInputStreams - time
-//        }
-//      })
+      //kvp._2.count().print()
+      val name = kvp._1
+      val stream = kvp._2
+      stream.persist()
+      stream.foreach((rdd,time) => {
+
+
+
+        if (!recentBatchOfInputStreams.contains(time))
+          recentBatchOfInputStreams += time -> scala.collection.mutable.Map[String, RDD[String]]()
+
+        recentBatchOfInputStreams(time) += name -> rdd
+
+        if(recentBatchOfInputStreams(time).keySet == inputStreams.keys){
+          processRDDActor ! (time,recentBatchOfInputStreams(time))
+          //processBatch(time, recentBatchOfInputStreams(time))
+          recentBatchOfInputStreams - time
+        }
+      })
     })
     ssc.start()
   }
@@ -103,7 +105,7 @@ class SqlSparkStreamingContext(master: String,
   def processBatch(time:Time, rdds : scala.collection.mutable.Map[String, RDD[String]]){
     println("running " + time)
 
-    rdds.foreach(tp => println(time + " " +tp._2.count()))
+    //rdds.foreach(tp => println(time + " " +tp._2.count()))
 
     val optimizeStart = System.nanoTime()
     if(args.contains("-reorder"))
@@ -111,14 +113,14 @@ class SqlSparkStreamingContext(master: String,
 
 
 
-    val starttime = System.nanoTime()
+    val starttime = System.currentTimeMillis()
     val exec = new Execution(time,rdds)
 
 
-    //operatorGraph.execute(rdd =>  SqlHelper.printRDD(rdd),exec)
+    operatorGraph.execute(rdd =>  SqlHelper.printRDD(rdd),exec)
 
 
-    val timeUsed = (System.nanoTime() - starttime)/1000000.0
+    val timeUsed = (System.currentTimeMillis() - starttime)
 
     if(batchCount > 10){
       timeSum += timeUsed

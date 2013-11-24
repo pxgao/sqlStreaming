@@ -11,6 +11,9 @@ object NetworkSQL {
 //      System.exit(1)
 //    }
     println(args.toList)
+    println("Extended info = " + System.getProperty("sun.io.serialization.extendedDebugInfo", "false"))
+    println("Test = " + System.getProperty("test", "false"))
+
 
     // Create the context with a 1 second batch size
 

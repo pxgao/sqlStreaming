@@ -377,17 +377,16 @@ class GroupByOperator(parentOp : Operator,
     //val result = Array[RDD[IndexedSeq[Any]]](mergeBatch(unioned))
 
 
-    val unioned = rddPair.values
-      .map(_.mapValues(Seq(_)))
-      .reduce((r1, r2) => r1.cogroup(r2).mapValues(tp => tp._1.flatten ++ tp._2.flatten))
+    //val unioned = rddPair.values
+//      .map(_.mapValues(Seq(_)))
+//      .reduce((r1, r2) => r1.cogroup(r2).mapValues(tp => tp._1.flatten ++ tp._2.flatten))
 
-    val grouped = unioned.mapValues(records => finalProcessing(records.reduce((x,y) => mergeCombiners(x,y,localValueFunctions)), localValueFunctions))
-
-//    val unioned = new PartitionAwareUnionRDD(this.parentCtx.ssc.sparkContext, rddPair.values.toSeq)
-//    //val unioned = this.parentCtx.ssc.sparkContext.union(rddPair.values.toSeq)
-//    println("original num part:" + rddPair.values.head.partitions.length + " union num part:" + unioned.partitions.length)
-//    val grouped = unioned.reduceByKey((x,y) => mergeCombiners(x,y,localValueFunctions))
-//      .mapValues(records => finalProcessing(records, localValueFunctions))
+    //val grouped = unioned.mapValues(records => finalProcessing(records.reduce((x,y) => mergeCombiners(x,y,localValueFunctions)), localValueFunctions))
+    val unioned =  partitionAwareUnion(rddPair.values.toArray.toSeq)
+    //val unioned = this.parentCtx.ssc.sparkContext.union(rddPair.values.toSeq)
+    println("original num part:" + rddPair.values.head.partitions.length + " union num part:" + unioned.partitions.length)
+    val grouped = unioned.reduceByKey((x,y) => mergeCombiners(x,y,localValueFunctions))
+      .mapValues(records => finalProcessing(records, localValueFunctions))
 
 
     val result = Array(grouped.map(tp => tp._1 ++ tp._2))
@@ -458,6 +457,10 @@ class GroupByOperator(parentOp : Operator,
 //  }
 
   override def toString = super.toString + "keys:" + keyColumnsArr + " values:" + functions
+
+  def partitionAwareUnion[T: ClassManifest](rdds: Seq[RDD[T]]): RDD[T] = {
+    new PartitionerAwareUnionRDD(rdds.head.sparkContext, rdds)
+  }
 }
 
 
@@ -562,8 +565,10 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
   var cached = Map[(RDD[IndexedSeq[Any]], RDD[IndexedSeq[Any]]), RDD[IndexedSeq[Any]]]()
-  var leftShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
-  var rightShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
+  //var leftShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
+  //var rightShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
+  var leftShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
+  var rightShuffleCache =  Map[RDD[IndexedSeq[Any]], RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
 
   var selectivity : Double = 1.0
 
@@ -641,7 +646,7 @@ class InnerJoinOperator(parentOp1 : Operator,
           result.map(
             record => (localJoinCondition.value.map(tp => record(tp._1)),record))
             .partitionBy(partitioner)
-            .mapPartitions(iter => convertToHashMap(iter) , true)
+            //.mapPartitions(iter => convertToHashMap(iter) , true)
         }
       (result, shuffled)
     }).toMap
@@ -668,7 +673,7 @@ class InnerJoinOperator(parentOp1 : Operator,
           result.map(
             record => (localJoinCondition.value.map(tp => record(tp._1)),record))
             .partitionBy(partitioner)
-            .mapPartitions(iter => convertToHashMap(iter) , true)
+            //.mapPartitions(iter => convertToHashMap(iter) , true)
         }
       (result, shuffled)
     }).toMap
@@ -701,7 +706,7 @@ class InnerJoinOperator(parentOp1 : Operator,
           val rightShuffled = rightShuffleMap(rightRdd)
 
 
-          hashedJoin(leftShuffled, rightShuffled)
+          join(leftShuffled, rightShuffled)
         }
       result += (leftRdd, rightRdd) -> res
     }
@@ -717,7 +722,7 @@ class InnerJoinOperator(parentOp1 : Operator,
     }
 
 
-    result.values.toArray
+    Array( new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext, result.values.toArray.toSeq)  )
 
   }
 
@@ -747,10 +752,10 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
     val joined = leftPartitioned.join(rightPartitioned)
-    val result = joined.map(pair => {
+    val result = joined.mapPartitions (it => it.map{pair =>
       val combined = pair._2._1 ++ pair._2._2
       outputSchema.getSchemaArray.map(kvp => combined(getLocalIdFromGlobalId.value(kvp._2)))
-    }
+    }, true
     )
 
 
@@ -798,20 +803,19 @@ class InnerJoinOperator(parentOp1 : Operator,
 }
 
 
-
-class PartitionAwareUnionRDDPartition(val idx: Int, val partitions: Array[Partition])
+class PartitionerAwareUnionRDDPartition(val idx: Int, val partitions: Array[Partition])
   extends Partition {
   override val index = idx
   override def hashCode(): Int = idx
 }
 
-
-class PartitionAwareUnionRDD[T: ClassManifest](
-                                                sc: SparkContext,
-                                                var rdds: Seq[RDD[T]])
-  extends RDD[T](sc, rdds.map(x => new OneToOneDependency(x))) {
+class PartitionerAwareUnionRDD[T: ClassManifest](
+    sc: SparkContext,
+    var rdds: Seq[RDD[T]]
+  ) extends RDD[T](sc, rdds.map(x => new OneToOneDependency(x))) {
   require(rdds.length > 0)
-  require(rdds.flatMap(_.partitioner).distinct.length == 1, "Parent RDDs have different partitioners")
+  require(rdds.flatMap(_.partitioner).toSet.size == 1,
+    "Parent RDDs do not have the same partitioner: " + rdds.flatMap(_.partitioner))
 
   override val partitioner = rdds.head.partitioner
 
@@ -819,14 +823,39 @@ class PartitionAwareUnionRDD[T: ClassManifest](
     val numPartitions = rdds.head.partitions.length
     (0 until numPartitions).map(index => {
       val parentPartitions = rdds.map(_.partitions(index)).toArray
-      new PartitionAwareUnionRDDPartition(index, parentPartitions)
+      new PartitionerAwareUnionRDDPartition(index, parentPartitions)
     }).toArray
   }
+  /*
+  // Get the location where most of the partitions of parent RDDs are located
+  override def getPreferredLocations(s: Partition): Seq[String] = {
+    logDebug("Getting preferred locations for " + this)
+    val parentPartitions = s.asInstanceOf[PartitionerAwareUnionRDDPartition].partitions
+    val locations = rdds.zip(parentPartitions).flatMap {
+      case (rdd, part) => {
+        val parentLocations = currPrefLocs(rdd, part)
+        logDebug("Location of " + rdd + " partition " + part.index + " = " + parentLocations)
+        parentLocations
+      }
+    }
 
+    if (locations.isEmpty) {
+      Seq.empty
+    } else  {
+      Seq(locations.groupBy(x => x).map(x => (x._1, x._2.length)).maxBy(_._2)._1)
+    }
+  }
+  */
   override def compute(s: Partition, context: TaskContext): Iterator[T] = {
-    val parentPartitions = s.asInstanceOf[PartitionAwareUnionRDDPartition].partitions
+    val parentPartitions = s.asInstanceOf[PartitionerAwareUnionRDDPartition].partitions
     rdds.zip(parentPartitions).iterator.flatMap {
       case (rdd, p) => rdd.iterator(p, context)
     }
   }
+  /*
+  // gets the *current* preferred locations from the DAGScheduler (as opposed to the static ones)
+  private def currPrefLocs(rdd: RDD[_], part: Partition): Seq[String] = {
+    rdd.context.getPreferredLocs(rdd, part.index).map(tl => tl.host)
+  }
+  */
 }
