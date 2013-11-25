@@ -167,7 +167,7 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) {
   }
 
   def execute(func : RDD[IndexedSeq[Any]] => Unit, exec : Execution){
-    outputOperators.foreach(op => op.execute(exec).foreach(func(_)))
+    outputOperators.foreach(op => func(op.execute(exec)))
   }
 }
 

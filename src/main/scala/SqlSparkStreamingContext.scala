@@ -47,7 +47,7 @@ class SqlSparkStreamingContext(master: String,
 
   def socketTextStream(ip : String, port : Int, name: String) {
     //inputStreams += name -> ssc.socketTextStream(ip, port)
-    inputStreams += name -> new ConstantInputDStream[String](ssc, ssc.sparkContext.makeRDD(1 to 1000, 5).map(x => "" + (scala.util.Random.nextGaussian() * 100) + "," + 1 ))
+    inputStreams += name -> new ConstantInputDStream[String](ssc, ssc.sparkContext.makeRDD(1 to 1000, 5).map(x => (scala.util.Random.nextGaussian() * 100).toInt + "," + 1 ))
   }
 
 
