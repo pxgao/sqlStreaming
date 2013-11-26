@@ -551,10 +551,9 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
   var cached = Map[(RDD[IndexedSeq[Any]], RDD[IndexedSeq[Any]]), RDD[IndexedSeq[Any]]]()
-  //var leftShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
-  //var rightShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
-  var leftShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
-  var rightShuffleCache =  Map[RDD[IndexedSeq[Any]], RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
+
+  var lastLeftShuffled : RDD[(IndexedSeq[Any],IndexedSeq[Any])] = this.parentCtx.ssc.sparkContext.makeRDD(Seq())
+  var lastrightShuffled : RDD[(IndexedSeq[Any],IndexedSeq[Any])] = this.parentCtx.ssc.sparkContext.makeRDD(Seq())
 
   var selectivity : Double = 1.0
 
@@ -620,12 +619,26 @@ class InnerJoinOperator(parentOp1 : Operator,
 
     val leftParentResult = parentOperators(0).execute(exec)
       .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+      .partitionBy(this.partitioner).persist(this.parentCtx.defaultStorageLevel)
 
     val rightParentResult = parentOperators(1).execute(exec)
       .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+      .partitionBy(this.partitioner).persist(this.parentCtx.defaultStorageLevel)
+
+    val leftCogrouped = lastLeftShuffled.cogroup(leftParentResult).persist(this.parentCtx.defaultStorageLevel)
+    val rightCogrouped = lastrightShuffled.cogroup(rightParentResult).persist(this.parentCtx.defaultStorageLevel)
+
+    val joined = leftCogrouped.cogroup(rightCogrouped)
+
+
+
+
 
     val result = join(leftParentResult, rightParentResult)
 
+
+    lastLeftShuffled = leftParentResult
+    lastrightShuffled = rightParentResult
     result
 
   }
