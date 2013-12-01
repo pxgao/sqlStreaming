@@ -6,6 +6,7 @@ import scala.actors.Actor._
 import java.io.{File, PrintWriter}
 import scala.Tuple2
 import org.apache.spark.streaming.dstream.ConstantInputDStream
+import scala.collection.mutable
 
 
 /**
@@ -37,6 +38,8 @@ class SqlSparkStreamingContext(master: String,
 
   var args :Array[String] = null
 
+  val inputController = new InputQueueController(ssc.sparkContext)
+
 
   def getBatchDuration = batchDuration
 
@@ -47,7 +50,9 @@ class SqlSparkStreamingContext(master: String,
 
   def socketTextStream(ip : String, port : Int, name: String) {
     //inputStreams += name -> ssc.socketTextStream(ip, port)
-    inputStreams += name -> new ConstantInputDStream[String](ssc, ssc.sparkContext.makeRDD(1 to 1000, 5).map(x => (scala.util.Random.nextGaussian() * 100).toInt + "," + 1 ))
+
+    inputStreams += name -> ssc.queueStream(inputController.inputQueues(port),true)
+    //inputStreams += name -> new ConstantInputDStream[String](ssc, ssc.sparkContext.makeRDD(1 to 1000, 5).map(x => (scala.util.Random.nextGaussian() * 100).toInt + "," + 1 ))
   }
 
 
@@ -76,6 +81,8 @@ class SqlSparkStreamingContext(master: String,
       })
     })
     ssc.start()
+
+    new Thread(inputController).start()
   }
 
   def stop(){

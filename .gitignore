@@ -16,3 +16,4 @@ log/
 results/
 sql.txt
 log.txt
+src/main/resources/log4j.properties

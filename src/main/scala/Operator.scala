@@ -535,9 +535,7 @@ class OutputOperator(parentOp : Operator,
 class InnerJoinOperator(parentOp1 : Operator,
                         parentOp2 : Operator,
                         joinCondition : IndexedSeq[(Int, Int)],
-                        parentCtx : SqlSparkStreamingContext,
-                        var leftWindow : Int = 1,
-                        var rightWindow : Int = 1
+                        parentCtx : SqlSparkStreamingContext
                          ) extends BinaryOperator {
   sqlContext = parentCtx
   sqlContext.operatorGraph.addOperator(this)
