@@ -9,8 +9,8 @@
 [0m[[31merror[0m] [0mSLF4J: Found binding in [jar:file:/home/peter/.ivy2/cache/org.slf4j/slf4j-simple/jars/slf4j-simple-1.6.4.jar!/org/slf4j/impl/StaticLoggerBinder.class][0m
 [0m[[31merror[0m] [0mSLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.[0m
 [0m[[31merror[0m] [0mSLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory][0m
-[0m[[0minfo[0m] [0m2013-12-01 12:10:50,567 WARN Utils: Your hostname, peter-vb resolves to a loopback address: 127.0.1.1; using 10.0.2.15 instead (on interface eth0)[0m
-[0m[[0minfo[0m] [0m2013-12-01 12:10:50,569 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address[0m
+[0m[[0minfo[0m] [0m2013-12-01 12:39:15,722 WARN Utils: Your hostname, peter-vb resolves to a loopback address: 127.0.1.1; using 10.0.2.15 instead (on interface eth0)[0m
+[0m[[0minfo[0m] [0m2013-12-01 12:39:15,724 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address[0m
 [0m[[0minfo[0m] [0m[1.56] parsed: (x,input Map(a -> int, b -> int) from localhost:9999 delimiter ,)[0m
 [0m[[0minfo[0m] [0m[1.58] parsed: //y = input c:int,d:int from localhost:9998 delimiter ","[0m
 [0m[[0minfo[0m] [0m[1.58] parsed: //z = input e:int,f:int from localhost:9997 delimiter ","[0m
@@ -24,446 +24,1119 @@
 [0m[[0minfo[0m] [0m[1.41] parsed: (ft,Map(select -> List(null(null.a) as null, null(null.avgb) as null), from -> gb, where -> a>10.0))[0m
 [0m[[0minfo[0m] [0m[1.37] parsed: output List(null(null.a) as null, null(null.avgb) as null) delimiter ,[0m
 [0m[[0minfo[0m] [0mMap(a -> (int,0), avgb -> (double,2))[0m
-[0m[[0minfo[0m] [0mOutputOperator@191946255 [0m
-[0m[[0minfo[0m] [0m  SelectOperator@1771811800 Vector(0, 2)[0m
-[0m[[0minfo[0m] [0m    WhereOperator@1832673298 Set(0)Sel:1.0[0m
-[0m[[0minfo[0m] [0m      SelectOperator@382170565 Vector(0, 2)[0m
-[0m[[0minfo[0m] [0m        GroupByOperator@17097778 keys:Vector(0) values:Map(1 -> main.scala.GroupByCombiner@68218f23)[0m
-[0m[[0minfo[0m] [0m          ParseOperator@1933342781 Vector((int,0), (int,1))[0m
+[0m[[0minfo[0m] [0mOutputOperator@420155532 [0m
+[0m[[0minfo[0m] [0m  SelectOperator@763205605 Vector(0, 2)[0m
+[0m[[0minfo[0m] [0m    WhereOperator@276779704 Set(0)Sel:1.0[0m
+[0m[[0minfo[0m] [0m      SelectOperator@386905726 Vector(0, 2)[0m
+[0m[[0minfo[0m] [0m        GroupByOperator@144053766 keys:Vector(0) values:Map(1 -> main.scala.GroupByCombiner@357fe851)[0m
+[0m[[0minfo[0m] [0m          ParseOperator@1617770823 Vector((int,0), (int,1))[0m
 [0m[[0minfo[0m] [0mFinal Operator Graph[0m
-[0m[[0minfo[0m] [0mOutputOperator@191946255 [0m
-[0m[[0minfo[0m] [0m  SelectOperator@1771811800 Vector(0, 2)[0m
-[0m[[0minfo[0m] [0m    WhereOperator@1832673298 Set(0)Sel:1.0[0m
-[0m[[0minfo[0m] [0m      SelectOperator@382170565 Vector(0, 2)[0m
-[0m[[0minfo[0m] [0m        GroupByOperator@17097778 keys:Vector(0) values:Map(1 -> main.scala.GroupByCombiner@68218f23)[0m
-[0m[[0minfo[0m] [0m          ParseOperator@1933342781 Vector((int,0), (int,1))[0m
+[0m[[0minfo[0m] [0mOutputOperator@420155532 [0m
+[0m[[0minfo[0m] [0m  SelectOperator@763205605 Vector(0, 2)[0m
+[0m[[0minfo[0m] [0m    WhereOperator@276779704 Set(0)Sel:1.0[0m
+[0m[[0minfo[0m] [0m      SelectOperator@386905726 Vector(0, 2)[0m
+[0m[[0minfo[0m] [0m        GroupByOperator@144053766 keys:Vector(0) values:Map(1 -> main.scala.GroupByCombiner@357fe851)[0m
+[0m[[0minfo[0m] [0m          ParseOperator@1617770823 Vector((int,0), (int,1))[0m
 [0m[[0minfo[0m] [0mx.mean = 0[0m
-[0m[[0minfo[0m] [0mrunning 1385928654000 ms[0m
+[0m[[0minfo[0m] [0mrunning 1385930359000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
 [0m[[0minfo[0m] [0mList(15, 1.0)[0m
 [0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
 [0m[[0minfo[0m] [0mList(17, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48322398680172E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:758 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928655000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
 [0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48323390387344E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:226 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928656000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48324387795235E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:271 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928657000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48325385480256E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:152 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928658000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.4832651484473E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:158 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928659000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48327389121452E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:155 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928660000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48328388078421E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:126 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928661000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48329391066904E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:117 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928662000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48330389280204E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:117 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928663000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48331384984528E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:96 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928664000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48332390281962E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:118 Avg:NaN[0m
-[0m[[0minfo[0m] [0mrunning 1385928665000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48333389676416E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:155 Avg:155.0[0m
-[0m[[0minfo[0m] [0mrunning 1385928666000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
 [0m[[0minfo[0m] [0mList(13, 1.0)[0m
 [0m[[0minfo[0m] [0mList(20, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48334389292407E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:110 Avg:132.5[0m
-[0m[[0minfo[0m] [0mrunning 1385928667000 ms[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50027411883217E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:1835 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930360000 ms[0m
 [0m[[0minfo[0m] [0mList(15, 1.0)[0m
 [0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
 [0m[[0minfo[0m] [0mList(14, 1.0)[0m
 [0m[[0minfo[0m] [0mList(17, 1.0)[0m
 [0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48335389879191E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:93 Avg:119.33333333333333[0m
-[0m[[0minfo[0m] [0mrunning 1385928668000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48336475159893E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:149 Avg:126.75[0m
-[0m[[0minfo[0m] [0mrunning 1385928669000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48337389213698E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:118 Avg:125.0[0m
-[0m[[0minfo[0m] [0mrunning 1385928670000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48338388509537E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:102 Avg:121.16666666666667[0m
-[0m[[0minfo[0m] [0mrunning 1385928671000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(17, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48339388297337E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:89 Avg:116.57142857142857[0m
-[0m[[0minfo[0m] [0mrunning 1385928672000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48340389422736E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:95 Avg:113.875[0m
-[0m[[0minfo[0m] [0mrunning 1385928673000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48341388539502E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:95 Avg:111.77777777777777[0m
-[0m[[0minfo[0m] [0mrunning 1385928674000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(17, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48342393309215E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:123 Avg:112.9[0m
-[0m[[0minfo[0m] [0mrunning 1385928675000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48343387554696E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:65 Avg:108.54545454545455[0m
-[0m[[0minfo[0m] [0mrunning 1385928676000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48344389989757E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:116 Avg:109.16666666666667[0m
-[0m[[0minfo[0m] [0mrunning 1385928677000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48345385565295E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:84 Avg:107.23076923076923[0m
-[0m[[0minfo[0m] [0mrunning 1385928678000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48346388952988E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:163 Avg:111.21428571428571[0m
-[0m[[0minfo[0m] [0mrunning 1385928679000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48347388828511E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:132 Avg:112.6[0m
-[0m[[0minfo[0m] [0mrunning 1385928680000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48348389862558E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:89 Avg:111.125[0m
-[0m[[0minfo[0m] [0mrunning 1385928681000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48349390307144E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:218 Avg:117.41176470588235[0m
-[0m[[0minfo[0m] [0mrunning 1385928682000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.4835038832405E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:83 Avg:115.5[0m
-[0m[[0minfo[0m] [0mrunning 1385928683000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(17, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.4835139166593E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:88 Avg:114.05263157894737[0m
-[0m[[0minfo[0m] [0mrunning 1385928684000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
 [0m[[0minfo[0m] [0mList(18, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48352408185728E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:99 Avg:113.3[0m
-[0m[[0minfo[0m] [0mrunning 1385928685000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.4835338966703E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:184 Avg:116.66666666666667[0m
-[0m[[0minfo[0m] [0mrunning 1385928686000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48354386463671E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:93 Avg:115.5909090909091[0m
-[0m[[0minfo[0m] [0mrunning 1385928687000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
 [0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48355389274477E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:79 Avg:114.0[0m
-[0m[[0minfo[0m] [0mrunning 1385928688000 ms[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50029248849206E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:723 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930361000 ms[0m
 [0m[[0minfo[0m] [0mList(15, 1.0)[0m
 [0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
 [0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48356516910522E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:59 Avg:111.70833333333333[0m
-[0m[[0minfo[0m] [0mrunning 1385928689000 ms[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50029971812994E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:1052 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930362000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
 [0m[[0minfo[0m] [0mList(15, 1.0)[0m
 [0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48357507291549E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:61 Avg:109.68[0m
-[0m[[0minfo[0m] [0mrunning 1385928690000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
 [0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.4835838569896E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:56 Avg:107.61538461538461[0m
-[0m[[0minfo[0m] [0mrunning 1385928691000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48359387797107E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:91 Avg:107.0[0m
-[0m[[0minfo[0m] [0mrunning 1385928692000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
 [0m[[0minfo[0m] [0mList(17, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48360388804614E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:78 Avg:105.96428571428571[0m
-[0m[[0minfo[0m] [0mrunning 1385928693000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
 [0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
 [0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48361388545201E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:152 Avg:107.55172413793103[0m
-[0m[[0minfo[0m] [0mrunning 1385928694000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(17, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48362395157325E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:69 Avg:106.26666666666667[0m
-[0m[[0minfo[0m] [0mrunning 1385928695000 ms[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50031030524704E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:776 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930363000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
 [0m[[0minfo[0m] [0mList(15, 1.0)[0m
 [0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
 [0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48363387275164E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:113 Avg:106.48387096774194[0m
-[0m[[0minfo[0m] [0mrunning 1385928696000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48364390333488E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:113 Avg:106.6875[0m
-[0m[[0minfo[0m] [0mrunning 1385928697000 ms[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50031806698554E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:620 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930364000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
 [0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
 [0m[[0minfo[0m] [0mList(17, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48365388622217E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:173 Avg:108.6969696969697[0m
-[0m[[0minfo[0m] [0mrunning 1385928698000 ms[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50032426684552E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:581 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930365000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
 [0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5003338612788E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:666 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930366000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50034391002634E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:602 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930367000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
 [0m[[0minfo[0m] [0mList(18, 1.0)[0m
 [0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48366416515516E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:70 Avg:107.55882352941177[0m
-[0m[[0minfo[0m] [0mrunning 1385928699000 ms[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5003538885276E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:535 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930368000 ms[0m
 [0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48367389468647E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:93 Avg:107.14285714285714[0m
-[0m[[0minfo[0m] [0mrunning 1385928700000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48368388609718E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:129 Avg:107.75[0m
-[0m[[0minfo[0m] [0mrunning 1385928701000 ms[0m
 [0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
 [0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.4836938815475E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:89 Avg:107.24324324324324[0m
-[0m[[0minfo[0m] [0mrunning 1385928702000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48370389913468E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:85 Avg:106.65789473684211[0m
-[0m[[0minfo[0m] [0mrunning 1385928703000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48371388128165E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:77 Avg:105.8974358974359[0m
-[0m[[0minfo[0m] [0mrunning 1385928704000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48372415737351E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:53 Avg:104.575[0m
-[0m[[0minfo[0m] [0mrunning 1385928705000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48373404827713E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:94 Avg:104.3170731707317[0m
-[0m[[0minfo[0m] [0mrunning 1385928706000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48374385329841E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:142 Avg:105.21428571428571[0m
-[0m[[0minfo[0m] [0mrunning 1385928707000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48375385750123E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:108 Avg:105.27906976744185[0m
-[0m[[0minfo[0m] [0mrunning 1385928708000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48376388706479E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:92 Avg:104.97727272727273[0m
-[0m[[0minfo[0m] [0mrunning 1385928709000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48377389367573E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:97 Avg:104.8[0m
-[0m[[0minfo[0m] [0mrunning 1385928710000 ms[0m
-[0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(24, 1.0)[0m
 [0m[[0minfo[0m] [0mList(17, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48378387482816E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:77 Avg:104.19565217391305[0m
-[0m[[0minfo[0m] [0mrunning 1385928711000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48379387554451E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:103 Avg:104.17021276595744[0m
-[0m[[0minfo[0m] [0mrunning 1385928712000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48380386514772E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:75 Avg:103.5625[0m
-[0m[[0minfo[0m] [0mrunning 1385928713000 ms[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
 [0m[[0minfo[0m] [0mList(18, 1.0)[0m
 [0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48381421137412E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:61 Avg:102.6938775510204[0m
-[0m[[0minfo[0m] [0mrunning 1385928714000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48382389723792E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:84 Avg:102.32[0m
-[0m[[0minfo[0m] [0mrunning 1385928715000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48383388552253E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:212 Avg:104.47058823529412[0m
-[0m[[0minfo[0m] [0mrunning 1385928716000 ms[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50036383372018E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:559 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930369000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
 [0m[[0minfo[0m] [0mList(15, 1.0)[0m
 [0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48384388987061E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:85 Avg:104.09615384615384[0m
-[0m[[0minfo[0m] [0mrunning 1385928717000 ms[0m
-[0m[[0minfo[0m] [0mList(12, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
 [0m[[0minfo[0m] [0mList(14, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48385384339107E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:64 Avg:103.33962264150944[0m
-[0m[[0minfo[0m] [0mrunning 1385928718000 ms[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50037387122888E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:593 Avg:NaN[0m
+[0m[[0minfo[0m] [0mrunning 1385930370000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
 [0m[[0minfo[0m] [0mList(15, 1.0)[0m
-[0m[[0minfo[0m] [0mList(11, 1.0)[0m
-[0m[[0minfo[0m] [0mList(16, 1.0)[0m
-[0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48386397102007E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:60 Avg:102.53703703703704[0m
-[0m[[0minfo[0m] [0mrunning 1385928719000 ms[0m
 [0m[[0minfo[0m] [0mList(12, 1.0)[0m
 [0m[[0minfo[0m] [0mList(11, 1.0)[0m
 [0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
 [0m[[0minfo[0m] [0mList(13, 1.0)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-7.48387389202525E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:110 Avg:102.67272727272727[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50038387820579E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:580 Avg:580.0[0m
+[0m[[0minfo[0m] [0mrunning 1385930371000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50039383015622E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:592 Avg:586.0[0m
+[0m[[0minfo[0m] [0mrunning 1385930372000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50040394797392E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:522 Avg:564.6666666666666[0m
+[0m[[0minfo[0m] [0mrunning 1385930373000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5004141458073E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:536 Avg:557.5[0m
+[0m[[0minfo[0m] [0mrunning 1385930374000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50042400006105E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:591 Avg:564.2[0m
+[0m[[0minfo[0m] [0mrunning 1385930375000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50043424397286E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:551 Avg:562.0[0m
+[0m[[0minfo[0m] [0mrunning 1385930376000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50044412966074E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:563 Avg:562.1428571428571[0m
+[0m[[0minfo[0m] [0mrunning 1385930377000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50045386968779E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:512 Avg:555.875[0m
+[0m[[0minfo[0m] [0mrunning 1385930378000 ms[0m
+[0m[[0minfo[0m] [0mList(25, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50046386437824E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:599 Avg:560.6666666666666[0m
+[0m[[0minfo[0m] [0mrunning 1385930379000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50047385956316E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:590 Avg:563.6[0m
+[0m[[0minfo[0m] [0mrunning 1385930380000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(24, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50048387526464E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:569 Avg:564.0909090909091[0m
+[0m[[0minfo[0m] [0mrunning 1385930381000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50049388664714E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:579 Avg:565.3333333333334[0m
+[0m[[0minfo[0m] [0mrunning 1385930382000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50050386607309E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:601 Avg:568.0769230769231[0m
+[0m[[0minfo[0m] [0mrunning 1385930383000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50051386626144E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:541 Avg:566.1428571428571[0m
+[0m[[0minfo[0m] [0mrunning 1385930384000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50052382601172E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:489 Avg:561.0[0m
+[0m[[0minfo[0m] [0mrunning 1385930385000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5005338713175E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:566 Avg:561.3125[0m
+[0m[[0minfo[0m] [0mrunning 1385930386000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(24, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5005438271455E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:547 Avg:560.4705882352941[0m
+[0m[[0minfo[0m] [0mrunning 1385930387000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50055383366146E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:469 Avg:555.3888888888889[0m
+[0m[[0minfo[0m] [0mrunning 1385930388000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50056399929525E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:522 Avg:553.6315789473684[0m
+[0m[[0minfo[0m] [0mrunning 1385930389000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50057404385232E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:512 Avg:551.55[0m
+[0m[[0minfo[0m] [0mrunning 1385930390000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50058430724425E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:559 Avg:551.9047619047619[0m
+[0m[[0minfo[0m] [0mrunning 1385930391000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50059474803285E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:516 Avg:550.2727272727273[0m
+[0m[[0minfo[0m] [0mrunning 1385930392000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50060387222526E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:689 Avg:556.304347826087[0m
+[0m[[0minfo[0m] [0mrunning 1385930393000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5006138772578E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:577 Avg:557.1666666666666[0m
+[0m[[0minfo[0m] [0mrunning 1385930394000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5006241377136E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:543 Avg:556.6[0m
+[0m[[0minfo[0m] [0mrunning 1385930395000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50063385353369E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:546 Avg:556.1923076923077[0m
+[0m[[0minfo[0m] [0mrunning 1385930396000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50064386864012E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:632 Avg:559.0[0m
+[0m[[0minfo[0m] [0mrunning 1385930397000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50065387425932E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:587 Avg:560.0[0m
+[0m[[0minfo[0m] [0mrunning 1385930398000 ms[0m
+[0m[[0minfo[0m] [0mList(25, 1.0)[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50066385926698E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:557 Avg:559.8965517241379[0m
+[0m[[0minfo[0m] [0mrunning 1385930399000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50067386317367E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:584 Avg:560.7[0m
+[0m[[0minfo[0m] [0mrunning 1385930400000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50068413429283E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:563 Avg:560.7741935483871[0m
+[0m[[0minfo[0m] [0mrunning 1385930401000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50069386699494E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:535 Avg:559.96875[0m
+[0m[[0minfo[0m] [0mrunning 1385930402000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50070383230179E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:523 Avg:558.8484848484849[0m
+[0m[[0minfo[0m] [0mrunning 1385930403000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50071383181967E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:503 Avg:557.2058823529412[0m
+[0m[[0minfo[0m] [0mrunning 1385930404000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5007238661464E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:486 Avg:555.1714285714286[0m
+[0m[[0minfo[0m] [0mrunning 1385930405000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50073384882137E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:521 Avg:554.2222222222222[0m
+[0m[[0minfo[0m] [0mrunning 1385930406000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50074413336679E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:480 Avg:552.2162162162163[0m
+[0m[[0minfo[0m] [0mrunning 1385930407000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50075386931233E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:526 Avg:551.5263157894736[0m
+[0m[[0minfo[0m] [0mrunning 1385930408000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50076386674055E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:604 Avg:552.8717948717949[0m
+[0m[[0minfo[0m] [0mrunning 1385930409000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50077385323164E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:531 Avg:552.325[0m
+[0m[[0minfo[0m] [0mrunning 1385930410000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50078386657807E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:532 Avg:551.829268292683[0m
+[0m[[0minfo[0m] [0mrunning 1385930411000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50079384006473E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:543 Avg:551.6190476190476[0m
+[0m[[0minfo[0m] [0mrunning 1385930412000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50080386318613E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:561 Avg:551.8372093023256[0m
+[0m[[0minfo[0m] [0mrunning 1385930413000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50081387516927E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:586 Avg:552.6136363636364[0m
+[0m[[0minfo[0m] [0mrunning 1385930414000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50082382969544E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:539 Avg:552.3111111111111[0m
+[0m[[0minfo[0m] [0mrunning 1385930415000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(26, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50083387888996E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:559 Avg:552.4565217391304[0m
+[0m[[0minfo[0m] [0mrunning 1385930416000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50084386273546E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:575 Avg:552.936170212766[0m
+[0m[[0minfo[0m] [0mrunning 1385930417000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(24, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5008538683407E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:548 Avg:552.8333333333334[0m
+[0m[[0minfo[0m] [0mrunning 1385930418000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50086387017171E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:599 Avg:553.7755102040817[0m
+[0m[[0minfo[0m] [0mrunning 1385930419000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50087386188972E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:544 Avg:553.58[0m
+[0m[[0minfo[0m] [0mrunning 1385930420000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50088513456533E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:499 Avg:552.5098039215686[0m
+[0m[[0minfo[0m] [0mrunning 1385930421000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(24, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50089384505474E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:536 Avg:552.1923076923077[0m
+[0m[[0minfo[0m] [0mrunning 1385930422000 ms[0m
+[0m[[0minfo[0m] [0mList(25, 1.0)[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(24, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50090403145652E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:533 Avg:551.8301886792453[0m
+[0m[[0minfo[0m] [0mrunning 1385930423000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(27, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50091386490876E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:584 Avg:552.425925925926[0m
+[0m[[0minfo[0m] [0mrunning 1385930424000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50092384594944E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:580 Avg:552.9272727272727[0m
+[0m[[0minfo[0m] [0mrunning 1385930425000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50093387218017E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:552 Avg:552.9107142857143[0m
+[0m[[0minfo[0m] [0mrunning 1385930426000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50094386259913E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:542 Avg:552.719298245614[0m
+[0m[[0minfo[0m] [0mrunning 1385930427000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50095386581021E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:538 Avg:552.4655172413793[0m
+[0m[[0minfo[0m] [0mrunning 1385930428000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50096403750343E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:570 Avg:552.7627118644068[0m
+[0m[[0minfo[0m] [0mrunning 1385930429000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.5009742192007E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:545 Avg:552.6333333333333[0m
+[0m[[0minfo[0m] [0mrunning 1385930430000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50098414473158E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:513 Avg:551.983606557377[0m
+[0m[[0minfo[0m] [0mrunning 1385930431000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50099463382236E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:511 Avg:551.3225806451613[0m
+[0m[[0minfo[0m] [0mrunning 1385930432000 ms[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0mList(23, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50100386662903E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:550 Avg:551.3015873015873[0m
+[0m[[0minfo[0m] [0mrunning 1385930433000 ms[0m
+[0m[[0minfo[0m] [0mList(22, 1.0)[0m
+[0m[[0minfo[0m] [0mList(15, 1.0)[0m
+[0m[[0minfo[0m] [0mList(12, 1.0)[0m
+[0m[[0minfo[0m] [0mList(11, 1.0)[0m
+[0m[[0minfo[0m] [0mList(14, 1.0)[0m
+[0m[[0minfo[0m] [0mList(17, 1.0)[0m
+[0m[[0minfo[0m] [0mList(16, 1.0)[0m
+[0m[[0minfo[0m] [0mList(18, 1.0)[0m
+[0m[[0minfo[0m] [0mList(21, 1.0)[0m
+[0m[[0minfo[0m] [0mList(13, 1.0)[0m
+[0m[[0minfo[0m] [0mList(20, 1.0)[0m
+[0m[[0minfo[0m] [0mList(19, 1.0)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-7.50101386383376E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:531 Avg:550.984375[0m
+[0m[[0minfo[0m] [0mrunning 1385930434000 ms[0m
