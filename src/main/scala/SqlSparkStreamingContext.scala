@@ -7,6 +7,7 @@ import java.io.{File, PrintWriter}
 import scala.Tuple2
 import org.apache.spark.streaming.dstream.ConstantInputDStream
 import scala.collection.mutable
+import org.apache.spark.Logging
 
 
 /**
@@ -21,7 +22,7 @@ class SqlSparkStreamingContext(master: String,
                                batchDuration: Duration,
                                sparkHome: String = null,
                                jars: Seq[String] = Nil,
-                               environment: Map[String, String] = Map()) {
+                               environment: Map[String, String] = Map()) extends Logging {
   val ssc = new StreamingContext(master, appName, batchDuration,sparkHome, jars, environment)
 
   val defaultStorageLevel = org.apache.spark.storage.StorageLevel.MEMORY_ONLY_SER
@@ -410,6 +411,12 @@ class SqlSparkStreamingContext(master: String,
 
     print(this.operatorGraph.toString())
 
+
+    if(this.args.contains("-predicate")){
+      logInfo("Pushing Predicates")
+      this.operatorGraph.pushAllPredicates
+    }
+
 //    val f = (record : IndexedSeq[Any], schema : Schema) => {
 //      record.head.asInstanceOf[Int] > 0
 //    }
@@ -469,6 +476,8 @@ class SqlSparkStreamingContext(master: String,
 //    this.operatorGraph.InnerJoinOperatorSets.foreach(s => s.optimize())
 //    print(this.operatorGraph.toString())
 
+    println("Final Operator Graph")
+    print(this.operatorGraph.toString())
     start()
   }
 

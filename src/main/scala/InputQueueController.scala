@@ -14,10 +14,10 @@ import org.apache.spark.SparkContext
 class InputQueueController(sc : SparkContext) extends Runnable{
   val inputQueues = mutable.Map[Int, TextStreamQueue]()
 
-  val p = 20
+  val p = 20000
 
 
-  inputQueues += 9999 -> new TextStreamQueue(sc, 0, 100, 500)
+  inputQueues += 9999 -> new TextStreamQueue(sc, 0, 5, 500)
   inputQueues += 9998 -> new TextStreamQueue(sc, 0, 100, 500)
   inputQueues += 9997 -> new TextStreamQueue(sc, 400, 100, 500)
 

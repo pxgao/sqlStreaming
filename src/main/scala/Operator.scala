@@ -513,9 +513,7 @@ class OutputOperator(parentOp : Operator,
   override def execute(exec : Execution) : RDD[IndexedSeq[Any]] = {
     val rdd = parentOperators.head.execute(exec)
 
-    logDebug(rdd.toDebugString)
-    logDebug(rdd.context.getPersistentRDDs.toString())
-    logDebug("Ctx:" + rdd.context  + " " + this.parentCtx.ssc.sparkContext)
+
 
 
     if(isSelectAll)

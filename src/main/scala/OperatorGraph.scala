@@ -152,8 +152,8 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) {
       case pushTo : BinaryOperator => parentToReplaceWhenBinary
     }
 
-    pushTo.replaceParent(oldParent,operator)
     operator.setParent(oldParent)
+    pushTo.replaceParent(oldParent,operator)
 
   }
 
