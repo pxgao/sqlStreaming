@@ -476,10 +476,12 @@ class SqlSparkStreamingContext(master: String,
 //    println("optimizing where")
 //    this.operatorGraph.whereOperatorSets.foreach(s => s.optimize())
 
-//    println("grouping & optimizing inner join")
-//    this.operatorGraph.groupInnerJoin()
-//    this.operatorGraph.InnerJoinOperatorSets.foreach(s => s.optimize())
-//    print(this.operatorGraph.toString())
+    if(args.contains("-reorder")){
+      logInfo("grouping & optimizing inner join")
+      this.operatorGraph.groupInnerJoin()
+      this.operatorGraph.innerJoinOperatorSets.foreach(s => s.optimize())
+      logInfo(this.operatorGraph.toString())
+    }
 
     println("Final Operator Graph")
     print(this.operatorGraph.toString())

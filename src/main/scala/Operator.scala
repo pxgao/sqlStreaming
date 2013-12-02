@@ -7,6 +7,8 @@ import org.apache.spark.SparkContext._
 import org.apache.spark._
 import org.apache.spark.broadcast.Broadcast
 import scala.collection.mutable.ArrayBuffer
+import scala.actors.Actor
+import scala.actors.Actor._
 
 /**
  * Created with IntelliJ IDEA.
@@ -659,43 +661,43 @@ class InnerJoinOperator(parentOp1 : Operator,
     )
 
 
-//    if(this.parentCtx.args.contains("-reorder")){
-//      val joinAcc = parentCtx.ssc.sc.accumulator(0L)
-//      val rdd1Acc = parentCtx.ssc.sc.accumulator(0L)
-//      val rdd2Acc = parentCtx.ssc.sc.accumulator(0L)
-//
-//      joined.foreach(l => joinAcc += 1)
-//      leftPartitioned.foreach(l => rdd1Acc += 1)
-//      rightPartitioned.foreach(l => rdd2Acc += 1)
-//
-//      getSelectivityActor ! (rdd1Acc,rdd2Acc, joinAcc)
-//    }
+    if(this.parentCtx.args.contains("-reorder")){
+      val joinAcc = parentCtx.ssc.sparkContext.accumulator(0L)
+      val rdd1Acc = parentCtx.ssc.sparkContext.accumulator(0L)
+      val rdd2Acc = parentCtx.ssc.sparkContext.accumulator(0L)
+
+      joined.foreach(l => joinAcc += 1)
+      leftPartitioned.foreach(l => rdd1Acc += 1)
+      rightPartitioned.foreach(l => rdd2Acc += 1)
+
+      getSelectivityActor ! (rdd1Acc,rdd2Acc, joinAcc)
+    }
 
 
     result
   }
 
 
-//  val getSelectivityActor = actor{
-//    while(true){
-//      try{
-//        receive{
-//          case (rdd1Acc : Accumulator[Long], rdd2Acc :Accumulator[Long], joinAcc : Accumulator[Long]) =>
-//          {
-//            val joinedSize = joinAcc.value
-//            val rdd1Size = rdd1Acc.value
-//            val rdd2Size = rdd2Acc.value
-//            if(rdd1Size > 0 && rdd2Size > 0)
-//            {
-//              selectivity = joinedSize.toDouble /(rdd1Size * rdd2Size)
-//            }
-//          }
-//        }
-//      }catch{
-//        case e : Exception => e.printStackTrace()
-//      }
-//    }
-//  }
+  val getSelectivityActor = actor{
+    while(true){
+      try{
+        receive{
+          case (rdd1Acc : Accumulator[Long], rdd2Acc :Accumulator[Long], joinAcc : Accumulator[Long]) =>
+          {
+            val joinedSize = joinAcc.value
+            val rdd1Size = rdd1Acc.value
+            val rdd2Size = rdd2Acc.value
+            if(rdd1Size > 0 && rdd2Size > 0)
+            {
+              selectivity = joinedSize.toDouble /(rdd1Size * rdd2Size)
+            }
+          }
+        }
+      }catch{
+        case e : Exception => e.printStackTrace()
+      }
+    }
+  }
 
   def getJoinCondition = joinCondition
 

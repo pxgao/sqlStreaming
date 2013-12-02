@@ -14,16 +14,18 @@ import org.apache.spark.SparkContext
 class InputQueueController(sc : SparkContext) extends Runnable{
   val inputQueues = mutable.Map[Int, TextStreamQueue]()
 
-  val p = 20000
+  val p = 20
 
 
-  inputQueues += 9999 -> new TextStreamQueue(sc, 0, 5, 50000)
-  inputQueues += 9998 -> new TextStreamQueue(sc, 0, 100, 500)
-  inputQueues += 9997 -> new TextStreamQueue(sc, 400, 100, 500)
 
   var count = 0
   val m1 = 0
-  val m2 = 400
+  val m2 = 30
+
+  inputQueues += 9999 -> new TextStreamQueue(sc, m1, 10, 1000)
+  inputQueues += 9998 -> new TextStreamQueue(sc, m1, 10, 1000)
+  inputQueues += 9997 -> new TextStreamQueue(sc, m2, 10, 1000)
+
 
   def run() {
 
@@ -31,11 +33,11 @@ class InputQueueController(sc : SparkContext) extends Runnable{
     while(true){
       if(count%(p*2) == 0){
         inputQueues(9999).mean = m1
-        println("x.mean = " + m1)
+        println("~~~~~~~~~~~~~x.mean = " + m1)
       }
       if(count%(p*2) == p){
         inputQueues(9999).mean = m2
-        println("x.mean = " + m2)
+        println("~~~~~~~~~~~~~x.mean = " + m2)
       }
       count +=1
       Thread.sleep(1000)

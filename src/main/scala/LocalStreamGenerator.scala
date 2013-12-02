@@ -14,9 +14,6 @@ class TextStreamQueue (sc : SparkContext,
                              var recordsPerBatch : Int
                                 ) extends mutable.Queue[RDD[String]]{
 
-
-
-
   override def dequeue() : RDD[String] = {
     val sd = this.sd
     val mean = this.mean
