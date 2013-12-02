@@ -2,6 +2,7 @@ package main.scala
 
 import scala.collection.mutable.ArrayBuffer
 import org.apache.spark.rdd.RDD
+import org.apache.spark.Logging
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,10 +11,11 @@ import org.apache.spark.rdd.RDD
  * Time: 9:15 PM
  * To change this template use File | Settings | File Templates.
  */
-class OperatorGraph(_parentCtx : SqlSparkStreamingContext) {
+class OperatorGraph(_parentCtx : SqlSparkStreamingContext) extends Logging {
   val parentCtx = _parentCtx
   val outputOperators = scala.collection.mutable.ArrayBuffer[OutputOperator]()
   val whereOperators = scala.collection.mutable.ArrayBuffer[WhereOperator]()
+  val windowOperators = scala.collection.mutable.ArrayBuffer[WindowOperator]()
   val allOperators = scala.collection.mutable.ArrayBuffer[Operator]()
   val whereOperatorSets = ArrayBuffer[WhereOperatorSet]()
   val innerJoinOperators = ArrayBuffer[InnerJoinOperator]()
@@ -29,7 +31,8 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) {
       whereOperators += operator.asInstanceOf[WhereOperator]
     if(operator.isInstanceOf[InnerJoinOperator])
       innerJoinOperators += operator.asInstanceOf[InnerJoinOperator]
-
+    if(operator.isInstanceOf[WindowOperator])
+      windowOperators += operator.asInstanceOf[WindowOperator]
 
   }
 
@@ -157,7 +160,47 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) {
 
   }
 
+  def pushWindow(windowOp : WindowOperator){
 
+    //this return the operator we can push upto (above)
+    def findPushTo(pushTo : Operator, parent : Operator) : (Operator, Operator) = {
+      if(pushTo.getChildOperators.size != 1)
+        return (pushTo, parent)
+      else{
+        pushTo match{
+          case pushTo : GroupByOperator => return (pushTo, parent)
+          case pushTo : InnerJoinOperator => return (pushTo, parent)
+          case pushTo : OutputOperator => return (pushTo, parent)
+          case pushTo : ParseOperator => throw new Exception("Impossible to have parse operator here")
+          case pushTo : SelectOperator => findPushTo(pushTo.getChildOperators.head, pushTo)
+          case pushTo : WhereOperator => findPushTo(pushTo.getChildOperators.head, pushTo)
+          case pushTo : WindowOperator => findPushTo(pushTo.getChildOperators.head, pushTo)
+        }
+      }
+
+
+
+    }
+
+    val (pushTo, parent) = findPushTo(windowOp, windowOp.parentOperators.head)
+
+    logDebug("PushTo:" + pushTo)
+
+
+    if(pushTo == windowOp)
+      return
+
+    windowOp.childOperators.foreach( op => op.replaceParent(windowOp, windowOp.parentOperators.head))
+
+    windowOp.setParent(parent)
+    pushTo.replaceParent(parent, windowOp)
+
+
+
+
+  }
+
+  def pushAllWindows = windowOperators.foreach(w => pushWindow(w))
 
 
   override def toString() : String = {

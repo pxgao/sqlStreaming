@@ -417,6 +417,11 @@ class SqlSparkStreamingContext(master: String,
       this.operatorGraph.pushAllPredicates
     }
 
+    if(this.args.contains("-window")){
+      logInfo("Pushing Windows")
+      this.operatorGraph.pushAllWindows
+    }
+
 //    val f = (record : IndexedSeq[Any], schema : Schema) => {
 //      record.head.asInstanceOf[Int] > 0
 //    }
