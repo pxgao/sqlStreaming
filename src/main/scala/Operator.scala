@@ -173,7 +173,7 @@ class WhereOperatorSet(parentCtx : SqlSparkStreamingContext) extends UnaryOperat
 abstract class UnaryOperator extends Operator{
   def setParent(parentOp : Operator) {
     if(parentOperators.size > 0){
-      parentOperators.head.childOperators -= this
+      parentOperators.foreach(parent => parent.childOperators -= this)
       parentOperators.clear()
     }
     parentOperators += parentOp
@@ -225,7 +225,7 @@ class WindowOperator(parentOp : Operator, val batches : Int, parentCtx : SqlSpar
     //cached.foreach(kvp => if( !(kvp._1 > exec.getTime - this.parentCtx.getBatchDuration * batches)) kvp._2.foreach(_.unpersist(false)))
     cached = cached.filter(kvp => kvp._1 > exec.getTime - this.parentCtx.getBatchDuration * batches)
 
-    this.parentCtx.ssc.sparkContext.union( cached.values.toSeq)
+    this.parentCtx.ssc.sparkContext.union( cached.values.toSeq).coalesce(this.parentCtx.ssc.sparkContext.defaultParallelism, false)
 
   }
 
@@ -394,7 +394,7 @@ class GroupByOperator(parentOp : Operator,
       cached += exec.getTime -> grouped
       cached = cached.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * windowSize)
 
-      val unioned =  partitionAwareUnion(cached.values.toArray.toSeq)
+      val unioned =  new PartitionerAwareUnionRDD(cached.values.head.sparkContext, cached.values.toArray.toSeq)
 
       unioned.reduceByKey((x,y) => mergeCombiners(x,y,localValueFunctions))
         .mapValues(records => finalProcessing(records, localValueFunctions))
@@ -460,9 +460,7 @@ class GroupByOperator(parentOp : Operator,
 
   override def toString = super.toString + "keys:" + keyColumnsArr + " values:" + functions + " W:" + windowSize
 
-  def partitionAwareUnion[T: ClassManifest](rdds: Seq[RDD[T]]): RDD[T] = {
-    new PartitionerAwareUnionRDD(rdds.head.sparkContext, rdds)
-  }
+
 }
 
 
@@ -567,17 +565,26 @@ class InnerJoinOperator(parentOp1 : Operator,
   val leftJoinSet = joinCondition.map(tp=>tp._1).toSet
   val rightJoinSet = joinCondition.map(tp=>tp._2).toSet
 
+  var leftWindowSize = 1
+  var rightWindowSize = 1
 
 
-  var cached = Map[(RDD[IndexedSeq[Any]], RDD[IndexedSeq[Any]]), RDD[IndexedSeq[Any]]]()
-  //var leftShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
-  //var rightShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]]]()
-  var leftShuffleCache = Map[RDD[IndexedSeq[Any]], RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
-  var rightShuffleCache =  Map[RDD[IndexedSeq[Any]], RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
+  var cached = Map[(Time, Time), RDD[IndexedSeq[Any]]]()
+
+  var leftShuffleCache = Map[Time, RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
+  var rightShuffleCache =  Map[Time, RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
 
   var selectivity : Double = 1.0
 
   var partitioner = new HashPartitioner(parentCtx.ssc.sparkContext.defaultParallelism)
+
+  def setLeftWindow(size : Int){
+    leftWindowSize = size
+  }
+
+  def setRightWindow(size : Int){
+    rightWindowSize = size
+  }
 
   override def setParents(parentOp1 : Operator, parentOp2 : Operator){
     super.setParents(parentOp1, parentOp2)
@@ -639,14 +646,48 @@ class InnerJoinOperator(parentOp1 : Operator,
 
     val leftParentResult = parentOperators(0).execute(exec)
       .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+      .partitionBy(this.partitioner)
+      .persist(this.parentCtx.defaultStorageLevel)
 
     val rightParentResult = parentOperators(1).execute(exec)
       .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+      .partitionBy(this.partitioner)
+      .persist(this.parentCtx.defaultStorageLevel)
 
-    val result = join(leftParentResult, rightParentResult)
+    leftShuffleCache += exec.getTime -> leftParentResult
+    rightShuffleCache += exec.getTime -> rightParentResult
 
-    result
+    leftShuffleCache = leftShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * leftWindowSize)
+    rightShuffleCache = rightShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * rightWindowSize)
 
+    var result = Map[(Time, Time), RDD[IndexedSeq[Any]]]()
+
+    for((leftTime, leftRDD) <- leftShuffleCache; (rightTime, rightRDD) <- rightShuffleCache){
+      if(cached.contains((leftTime, rightTime))){
+        result += (leftTime,rightTime) -> cached((leftTime,rightTime))
+      }else{
+        val getStat =
+          if(leftTime == exec.getTime && rightTime == exec.getTime)
+            true
+          else
+            false
+        val joined = join(leftShuffleCache(leftTime), rightShuffleCache(rightTime), getStat)
+          .persist(this.parentCtx.defaultStorageLevel)
+        result += (leftTime,rightTime) -> joined
+
+      }
+    }
+
+    cached = result
+
+    val finalRDD = new PartitionerAwareUnionRDD(cached.values.head.sparkContext, cached.values.toArray.toSeq)
+
+    //val finalRDD = this.parentCtx.ssc.sparkContext.union(cached.values.toArray.toSeq)
+    //  .coalesce(this.parentCtx.ssc.sparkContext.defaultParallelism, false)
+
+    //logInfo(finalRDD.toDebugString)
+
+    finalRDD
   }
 
   def hashedJoin(left : RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]],
@@ -667,7 +708,7 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
   def join(leftPartitioned : RDD[(IndexedSeq[Any],IndexedSeq[Any])],
-           rightPartitioned : RDD[(IndexedSeq[Any],IndexedSeq[Any])]) = {
+           rightPartitioned : RDD[(IndexedSeq[Any],IndexedSeq[Any])], getStat : Boolean = false) = {
 
     val getLocalIdFromGlobalId = this.getLocalIdFromGlobalId
     val outputSchema = this.outputSchema
@@ -682,7 +723,7 @@ class InnerJoinOperator(parentOp1 : Operator,
     )
 
 
-    if(this.parentCtx.args.contains("-reorder")){
+    if(getStat && this.parentCtx.args.contains("-reorder")){
 //      leftPartitioned.persist(this.parentCtx.defaultStorageLevel)
 //      rightPartitioned.persist(this.parentCtx.defaultStorageLevel)
 //      result.persist(this.parentCtx.defaultStorageLevel)
@@ -728,7 +769,7 @@ class InnerJoinOperator(parentOp1 : Operator,
 
   def getJoinCondition = joinCondition
 
-  override def toString = super.toString + joinCondition + " Sel:" + selectivity
+  override def toString = super.toString + joinCondition + " Sel:" + selectivity + " W:" + leftWindowSize + " " + rightWindowSize
 }
 
 

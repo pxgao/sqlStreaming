@@ -169,6 +169,7 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) extends Logging {
 
     //this return the operator we can push upto (above)
     def findPushTo(pushTo : Operator, parent : Operator) : (Operator, Operator) = {
+      //logDebug("stack:" + pushTo + " #child:" + pushTo.getChildOperators.size)
       if(pushTo.getChildOperators.size != 1)
         return (pushTo, parent)
       else{
@@ -192,7 +193,7 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) extends Logging {
     logDebug("PushTo:" + pushTo)
 
 
-    if(pushTo == windowOp)
+    if(pushTo == windowOp || windowOp.childOperators.contains(pushTo))
       return
 
     windowOp.childOperators.foreach( op => op.replaceParent(windowOp, windowOp.parentOperators.head))
@@ -220,6 +221,32 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) extends Logging {
         case _ => Unit
       }
 
+    })
+  }
+
+  //this should called after pushAllWindows and GroupInnerJoin
+  //it is conflict with dynamic reordering
+  def incrementalJoin = {
+    innerJoinOperators.foreach(joinOperator => {
+      joinOperator.parentOperators.zipWithIndex.foreach(tp => {
+        val parent = tp._1
+        val index = tp._2
+        parent match{
+          case parent : WindowOperator => {
+            val windowSize = parent.batches
+            if(index == 0){
+              joinOperator.setLeftWindow(windowSize)
+            }else if(index == 1){
+              joinOperator.setRightWindow(windowSize)
+            }else
+              throw new Exception("Wrong parent operator index")
+            joinOperator.replaceParent(parent, parent.parentOperators.head)
+            allOperators -= parent
+            windowOperators -= parent
+          }
+          case _ => Unit
+        }
+      })
     })
   }
 

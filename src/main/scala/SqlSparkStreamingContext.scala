@@ -427,6 +427,11 @@ class SqlSparkStreamingContext(master: String,
       this.operatorGraph.incrementalGroupBy
     }
 
+    if(this.args.contains("-incre_join")){
+      logInfo("Incremental Join")
+      this.operatorGraph.incrementalJoin
+    }
+
     if(args.contains("-reorder")){
       logInfo("grouping & optimizing inner join")
       this.operatorGraph.groupInnerJoin()
