@@ -13,11 +13,17 @@ import org.apache.spark.Logging
  */
 class OperatorGraph(_parentCtx : SqlSparkStreamingContext) extends Logging {
   val parentCtx = _parentCtx
-  val outputOperators = scala.collection.mutable.ArrayBuffer[OutputOperator]()
-  val whereOperators = scala.collection.mutable.ArrayBuffer[WhereOperator]()
-  val windowOperators = scala.collection.mutable.ArrayBuffer[WindowOperator]()
+
   val allOperators = scala.collection.mutable.ArrayBuffer[Operator]()
+
+
+  val outputOperators = scala.collection.mutable.ArrayBuffer[OutputOperator]()
+  val windowOperators = scala.collection.mutable.ArrayBuffer[WindowOperator]()
+  val groupbyOperators = scala.collection.mutable.ArrayBuffer[GroupByOperator]()
+
+  val whereOperators = scala.collection.mutable.ArrayBuffer[WhereOperator]()
   val whereOperatorSets = ArrayBuffer[WhereOperatorSet]()
+
   val innerJoinOperators = ArrayBuffer[InnerJoinOperator]()
   val innerJoinOperatorSets = ArrayBuffer[InnerJoinOperatorSet]()
 
@@ -25,15 +31,14 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) extends Logging {
 
   def addOperator(operator : Operator){
     allOperators += operator
-    if(operator.isInstanceOf[OutputOperator])
-      outputOperators += operator.asInstanceOf[OutputOperator]
-    if(operator.isInstanceOf[WhereOperator])
-      whereOperators += operator.asInstanceOf[WhereOperator]
-    if(operator.isInstanceOf[InnerJoinOperator])
-      innerJoinOperators += operator.asInstanceOf[InnerJoinOperator]
-    if(operator.isInstanceOf[WindowOperator])
-      windowOperators += operator.asInstanceOf[WindowOperator]
-
+    operator match{
+      case operator : OutputOperator => outputOperators += operator
+      case operator : WhereOperator => whereOperators += operator
+      case operator : InnerJoinOperator => innerJoinOperators += operator
+      case operator : WindowOperator => windowOperators += operator
+      case operator : GroupByOperator => groupbyOperators += operator
+      case _ => Unit
+    }
   }
 
   def groupPredicate(){
@@ -201,6 +206,22 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) extends Logging {
   }
 
   def pushAllWindows = windowOperators.foreach(w => pushWindow(w))
+
+  def incrementalGroupBy = {
+    groupbyOperators.foreach(gb => {
+      gb.parentOperators.head match{
+        case parent : WindowOperator =>{
+          val windowSize = parent.batches
+          gb.setWindow(windowSize)
+          gb.replaceParent(parent, parent.parentOperators.head)
+          allOperators -= parent
+          windowOperators -= parent
+        }
+        case _ => Unit
+      }
+
+    })
+  }
 
 
   override def toString() : String = {

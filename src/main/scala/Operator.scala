@@ -207,7 +207,7 @@ abstract class BinaryOperator extends Operator{
   }
 }
 
-class WindowOperator(parentOp : Operator, batches : Int, parentCtx : SqlSparkStreamingContext) extends UnaryOperator{
+class WindowOperator(parentOp : Operator, val batches : Int, parentCtx : SqlSparkStreamingContext) extends UnaryOperator{
   sqlContext = parentCtx
   sqlContext.operatorGraph.addOperator(this)
   setParent(parentOp)
@@ -321,6 +321,8 @@ class GroupByOperator(parentOp : Operator,
   sqlContext = parentCtx
   sqlContext.operatorGraph.addOperator(this)
 
+  var windowSize = 1
+
   val valueColumns = functions.keySet
   val keyColumns = keyColumnsArr.toSet
   assert(keyColumns.intersect(valueColumns).isEmpty)
@@ -331,7 +333,7 @@ class GroupByOperator(parentOp : Operator,
   outputSchema = new Schema(keyColumnsArr.map(gid => (parentOp.outputSchema.getClassFromGlobalId(gid),gid))
     ++ functions.map(kvp => (kvp._2.getResultType, getNewGIDFromOldGID(kvp._1))))
 
-  var cached = Map[RDD[IndexedSeq[Any]],RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
+  var cached = Map[Time,RDD[(IndexedSeq[Any],IndexedSeq[Any])]]()
 
 
   def getKeyColumnsArr = keyColumnsArr
@@ -342,6 +344,10 @@ class GroupByOperator(parentOp : Operator,
   override def setParent(parentOp : Operator){
     super.setParent(parentOp)
     assert(keyColumns.union(valueColumns).subsetOf(parentOp.outputSchema.getSchemaArray.map(_._2).toSet))
+  }
+
+  def setWindow(newWindowSize : Int){
+    this.windowSize = newWindowSize
   }
 
   override def execute(exec : Execution) : RDD[IndexedSeq[Any]] = {
@@ -367,57 +373,72 @@ class GroupByOperator(parentOp : Operator,
 
     val rdd = parentOperators.head.execute(exec)
 
+
+
+    if(windowSize == 1){
+      val kvpRdd = rdd.map(record => (
+        localKeyColumnArr.map(record(_)).toIndexedSeq,
+        localFunctions.map(kvp => record(kvp._1)).toIndexedSeq)
+      )
+
+      kvpRdd.combineByKey[IndexedSeq[Any]](
+        (x : IndexedSeq[Any]) => createCombiner(x,localValueFunctions),
+        (x : IndexedSeq[Any],y : IndexedSeq[Any])=>mergeValue(x,y,localValueFunctions),
+        (x : IndexedSeq[Any],y : IndexedSeq[Any])=>mergeCombiners(x,y,localValueFunctions),
+        partitioner
+      ).mapValues(finalProcessing(_,localValueFunctions))
+        .map(kvp => kvp._1 ++ kvp._2)
+    }else{
+      val grouped = groupBy(rdd)
+
+      cached += exec.getTime -> grouped
+      cached = cached.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * windowSize)
+
+      val unioned =  partitionAwareUnion(cached.values.toArray.toSeq)
+
+      unioned.reduceByKey((x,y) => mergeCombiners(x,y,localValueFunctions))
+        .mapValues(records => finalProcessing(records, localValueFunctions))
+        .map(tp => tp._1 ++ tp._2)
+
+    }
+
+  }
+
+  //TODO: Try to keep the partition info by avoiding map
+  def groupBy(rdd : RDD[IndexedSeq[Any]]) : RDD[(IndexedSeq[Any],IndexedSeq[Any])] = {
+    val createCombiner = (x : IndexedSeq[Any], func : Map[Int, GroupByCombiner]) => {
+      func.map(kvp => kvp._2.getCreateCombiner(x(kvp._1))).toIndexedSeq
+    }
+
+    val mergeValue = (x : IndexedSeq[Any], y : IndexedSeq[Any], func : Map[Int, GroupByCombiner]) => {
+      func.map(kvp => kvp._2.getMergeValue(x(kvp._1), y(kvp._1))).toIndexedSeq
+    }
+
+    val mergeCombiners = (x : IndexedSeq[Any], y : IndexedSeq[Any], func : Map[Int, GroupByCombiner]) => {
+      func.map(kvp => kvp._2.getMergeCombiners(x(kvp._1), y(kvp._1))).toIndexedSeq
+    }
+
+
+    val localKeyColumnArr = this.keyColumnsArr.map(parentOp.outputSchema.getLocalIdFromGlobalId(_))
+    val localFunctions = this.functions.map(kvp => (parentOp.outputSchema.getLocalIdFromGlobalId(kvp._1), kvp._2) )
+    val localValueFunctions = localFunctions.zipWithIndex.map(kvp => (kvp._2,kvp._1._2))//the location in the groupby columns
+
     val kvpRdd = rdd.map(record => (
       localKeyColumnArr.map(record(_)).toIndexedSeq,
       localFunctions.map(kvp => record(kvp._1)).toIndexedSeq)
     )
+
 
     kvpRdd.combineByKey[IndexedSeq[Any]](
       (x : IndexedSeq[Any]) => createCombiner(x,localValueFunctions),
       (x : IndexedSeq[Any],y : IndexedSeq[Any])=>mergeValue(x,y,localValueFunctions),
       (x : IndexedSeq[Any],y : IndexedSeq[Any])=>mergeCombiners(x,y,localValueFunctions),
       partitioner
-    ).mapValues(finalProcessing(_,localValueFunctions))
-      .map(kvp => kvp._1 ++ kvp._2)
-
-
+    ).asInstanceOf[RDD[(IndexedSeq[Any],IndexedSeq[Any])]]
+//    val reduced = combined.mapValues(finalProcessing(_,localValueFunctions))
+//    val rr = reduced.map(kvp => kvp._1 ++ kvp._2)
+//    rr.map(arr => arr.toIndexedSeq)
   }
-
-  //TODO: Try to keep the partition info by avoiding map
-//  def groupBy(rdd : RDD[IndexedSeq[Any]]) : RDD[(IndexedSeq[Any],IndexedSeq[Any])] = {
-//    val createCombiner = (x : IndexedSeq[Any], func : Map[Int, GroupByCombiner]) => {
-//      func.map(kvp => kvp._2.getCreateCombiner(x(kvp._1))).toIndexedSeq
-//    }
-//
-//    val mergeValue = (x : IndexedSeq[Any], y : IndexedSeq[Any], func : Map[Int, GroupByCombiner]) => {
-//      func.map(kvp => kvp._2.getMergeValue(x(kvp._1), y(kvp._1))).toIndexedSeq
-//    }
-//
-//    val mergeCombiners = (x : IndexedSeq[Any], y : IndexedSeq[Any], func : Map[Int, GroupByCombiner]) => {
-//      func.map(kvp => kvp._2.getMergeCombiners(x(kvp._1), y(kvp._1))).toIndexedSeq
-//    }
-//
-//
-//    val localKeyColumnArr = this.keyColumnsArr.map(parentOp.outputSchema.getLocalIdFromGlobalId(_))
-//    val localFunctions = this.functions.map(kvp => (parentOp.outputSchema.getLocalIdFromGlobalId(kvp._1), kvp._2) )
-//    val localValueFunctions = localFunctions.zipWithIndex.map(kvp => (kvp._2,kvp._1._2))//the location in the groupby columns
-//
-//    val kvpRdd = rdd.map(record => (
-//      localKeyColumnArr.map(record(_)).toIndexedSeq,
-//      localFunctions.map(kvp => record(kvp._1)).toIndexedSeq)
-//    )
-//
-//
-//    kvpRdd.combineByKey[IndexedSeq[Any]](
-//      (x : IndexedSeq[Any]) => createCombiner(x,localValueFunctions),
-//      (x : IndexedSeq[Any],y : IndexedSeq[Any])=>mergeValue(x,y,localValueFunctions),
-//      (x : IndexedSeq[Any],y : IndexedSeq[Any])=>mergeCombiners(x,y,localValueFunctions),
-//      partitioner
-//    )
-////    val reduced = combined.mapValues(finalProcessing(_,localValueFunctions))
-////    val rr = reduced.map(kvp => kvp._1 ++ kvp._2)
-////    rr.map(arr => arr.toIndexedSeq)
-//  }
 
 //  def mergeBatch(rdd : RDD[(IndexedSeq[Any],IndexedSeq[Any])]) : RDD[IndexedSeq[Any]] = {
 //
@@ -437,7 +458,7 @@ class GroupByOperator(parentOp : Operator,
 //
 //  }
 
-  override def toString = super.toString + "keys:" + keyColumnsArr + " values:" + functions
+  override def toString = super.toString + "keys:" + keyColumnsArr + " values:" + functions + " W:" + windowSize
 
   def partitionAwareUnion[T: ClassManifest](rdds: Seq[RDD[T]]): RDD[T] = {
     new PartitionerAwareUnionRDD(rdds.head.sparkContext, rdds)
@@ -662,9 +683,9 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
     if(this.parentCtx.args.contains("-reorder")){
-      leftPartitioned.persist(this.parentCtx.defaultStorageLevel)
-      rightPartitioned.persist(this.parentCtx.defaultStorageLevel)
-      result.persist(this.parentCtx.defaultStorageLevel)
+//      leftPartitioned.persist(this.parentCtx.defaultStorageLevel)
+//      rightPartitioned.persist(this.parentCtx.defaultStorageLevel)
+//      result.persist(this.parentCtx.defaultStorageLevel)
 
 
 

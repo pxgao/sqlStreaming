@@ -115,7 +115,7 @@ class SqlSparkStreamingContext(master: String,
 
     //rdds.foreach(tp => println(time + " " +tp._2.count()))
 
-    val optimizeStart = System.nanoTime()
+    val optimizeStart = System.currentTimeMillis()
     if(args.contains("-reorder"))
       operatorGraph.innerJoinOperatorSets.foreach(s => s.optimize())
 
@@ -137,7 +137,7 @@ class SqlSparkStreamingContext(master: String,
 
     batchCount += 1
 
-    println("optimization time in ms:" + (starttime - optimizeStart)/1000000.0 )
+    println("optimization time in ms:" + (starttime - optimizeStart) )
     println("execution time in ms:" + timeUsed + " Avg:" + (timeSum/usedCount))
 
     SqlHelper.writeln(timeUsed.toString)
@@ -422,59 +422,10 @@ class SqlSparkStreamingContext(master: String,
       this.operatorGraph.pushAllWindows
     }
 
-//    val f = (record : IndexedSeq[Any], schema : Schema) => {
-//      record.head.asInstanceOf[Int] > 0
-//    }
-//
-//    val f2 = (record : IndexedSeq[Any], schema : Schema) => {
-//      record.tail.head.asInstanceOf[Int] > 0
-//    }
-//
-//
-//    val s = new Schema(IndexedSeq(
-//      ("int", columns.getGlobalColId),
-//      ("int", columns.getGlobalColId),
-//      ("int", columns.getGlobalColId),
-//      ("int", columns.getGlobalColId),
-//      ("int", columns.getGlobalColId),
-//      ("int", columns.getGlobalColId)) )
-
-//    socketTextStream("localhost", 9999, "ii")
-//    val in = new ParseOperator(s, "ii", this)
-//    val wh = new WhereOperator(in,f,this)
-//    val wh2 = new WhereOperator(wh,f2,this)
-//    val ou = new OutputOperator(wh2, IndexedSeq(0,1,2,3), this)
-
-//    val x = new ParseOperator(s, "ii", this)
-//    val in = new WindowOperator(x, 5,this)
-
-
-//    val se = new SelectOperator(in,IndexedSeq(0,1), this)
-//    val wh = new WhereOperator(se,f,Set(0),this){selectivity = 0.9}
-//    val se2 = new SelectOperator(in,IndexedSeq(2,3), this)
-//
-//    val jo = new InnerJoinOperator(wh,se2,IndexedSeq((0,2)),this)
-//    val wh2 = new WhereOperator(jo, f2, Set(1), this){selectivity = 0.7}
-//    val ou = new OutputOperator(wh2, IndexedSeq(0,1,2,3), this)
-
-//    val se0 = new SelectOperator(in,IndexedSeq(0,1), this)
-//    val se1 = new SelectOperator(in,IndexedSeq(2,3), this)
-//    val se2 = new SelectOperator(in,IndexedSeq(4,5), this)
-//
-//    val ja = new InnerJoinOperator(se0,se1,IndexedSeq((0,2)),this){selectivity = 2.1}
-//    val jb = new InnerJoinOperator(ja,se2,IndexedSeq((0,4)),this){selectivity = 1.9}
-//
-//    val ou = new OutputOperator(jb, IndexedSeq(0,1,2,3,4,5), this)
-
-//    print(this.operatorGraph.toString())
-//    println("pushing")
-//    this.operatorGraph.pushAllPredicates
-//    print(this.operatorGraph.toString())
-//    println("grouging where")
-//    this.operatorGraph.groupPredicate()
-//    print(this.operatorGraph.toString())
-//    println("optimizing where")
-//    this.operatorGraph.whereOperatorSets.foreach(s => s.optimize())
+    if(this.args.contains("-incre_gb")){
+      logInfo("Incremental Groupby")
+      this.operatorGraph.incrementalGroupBy
+    }
 
     if(args.contains("-reorder")){
       logInfo("grouping & optimizing inner join")
