@@ -662,7 +662,9 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
     if(this.parentCtx.args.contains("-reorder")){
-
+      leftPartitioned.persist(this.parentCtx.defaultStorageLevel)
+      rightPartitioned.persist(this.parentCtx.defaultStorageLevel)
+      result.persist(this.parentCtx.defaultStorageLevel)
 
 
 
