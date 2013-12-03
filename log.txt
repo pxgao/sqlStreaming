@@ -1,7 +1,7 @@
 [0m[[0minfo[0m] [0mLoading global plugins from /home/peter/.sbt/plugins[0m
 [0m[[0minfo[0m] [0mSet current project to SQL Streaming (in build file:/home/peter/sqlStreaming/)[0m
-[0m[[0minfo[0m] [0mRunning main.scala.NetworkSQL local[4] result[0m
-[0m[[0minfo[0m] [0mList(local[4], result)[0m
+[0m[[0minfo[0m] [0mRunning main.scala.NetworkSQL local[4] result -reorder[0m
+[0m[[0minfo[0m] [0mList(local[4], result, -reorder)[0m
 [0m[[0minfo[0m] [0mExtended info = true[0m
 [0m[[0minfo[0m] [0mTest = false[0m
 [0m[[31merror[0m] [0mSLF4J: Class path contains multiple SLF4J bindings.[0m
@@ -9,8 +9,8 @@
 [0m[[31merror[0m] [0mSLF4J: Found binding in [jar:file:/home/peter/.ivy2/cache/org.slf4j/slf4j-simple/jars/slf4j-simple-1.6.4.jar!/org/slf4j/impl/StaticLoggerBinder.class][0m
 [0m[[31merror[0m] [0mSLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.[0m
 [0m[[31merror[0m] [0mSLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory][0m
-[0m[[0minfo[0m] [0m2013-12-02 15:48:36,369 WARN Utils: Your hostname, peter-vb resolves to a loopback address: 127.0.1.1; using 10.0.2.15 instead (on interface eth0)[0m
-[0m[[0minfo[0m] [0m2013-12-02 15:48:36,371 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address[0m
+[0m[[0minfo[0m] [0m2013-12-02 16:21:00,556 WARN Utils: Your hostname, peter-vb resolves to a loopback address: 127.0.1.1; using 10.0.2.15 instead (on interface eth0)[0m
+[0m[[0minfo[0m] [0m2013-12-02 16:21:00,558 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address[0m
 [0m[[0minfo[0m] [0m[1.56] parsed: (x,input Map(a -> int, b -> int) from localhost:9999 delimiter ,)[0m
 [0m[[0minfo[0m] [0m[1.56] parsed: (y,input Map(c -> int, d -> int) from localhost:9998 delimiter ,)[0m
 [0m[[0minfo[0m] [0m[1.56] parsed: (z,input Map(e -> int, f -> int) from localhost:9997 delimiter ,)[0m
@@ -29,103 +29,341 @@
 [0m[[0minfo[0m] [0mjoin z.e[0m
 [0m[[0minfo[0m] [0mjoin z.f[0m
 [0m[[0minfo[0m] [0mMap(ca -> (int,6))[0m
-[0m[[0minfo[0m] [0mOutputOperator@21535536 [0m
-[0m[[0minfo[0m] [0m  SelectOperator@1657680272 Vector(6)[0m
-[0m[[0minfo[0m] [0m    GroupByOperator@1326978973 keys:Vector() values:Map(0 -> main.scala.GroupByCombiner@36b66cfc)[0m
-[0m[[0minfo[0m] [0m      SelectOperator@44904564 Vector(0, 5, 1, 2, 3, 4)[0m
-[0m[[0minfo[0m] [0m        InnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0m          InnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0m            ParseOperator@1179500003 Vector((int,0), (int,1))[0m
-[0m[[0minfo[0m] [0m            ParseOperator@435004964 Vector((int,2), (int,3))[0m
-[0m[[0minfo[0m] [0m          ParseOperator@1094095560 Vector((int,4), (int,5))[0m
+[0m[[0minfo[0m] [0mOutputOperator@704847355 [0m
+[0m[[0minfo[0m] [0m  SelectOperator@118672281 Vector(6)[0m
+[0m[[0minfo[0m] [0m    GroupByOperator@1660202351 keys:Vector() values:Map(0 -> main.scala.GroupByCombiner@2da6852a)[0m
+[0m[[0minfo[0m] [0m      SelectOperator@259039184 Vector(0, 5, 1, 2, 3, 4)[0m
+[0m[[0minfo[0m] [0m        InnerJoinOperator@722213019 Vector((0,4)) Sel:1.0[0m
+[0m[[0minfo[0m] [0m          InnerJoinOperator@656637489 Vector((0,2)) Sel:1.0[0m
+[0m[[0minfo[0m] [0m            ParseOperator@187815690 Vector((int,0), (int,1))[0m
+[0m[[0minfo[0m] [0m            ParseOperator@1964824387 Vector((int,2), (int,3))[0m
+[0m[[0minfo[0m] [0m          ParseOperator@947432390 Vector((int,4), (int,5))[0m
+[0m[[0minfo[0m] [0m2013-12-02 16:21:02,234 INFO SqlSparkStreamingContext: grouping & optimizing inner join[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:1.0[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:1.0[0m
+[0m[[0minfo[0m] [0m2013-12-02 16:21:02,264 INFO SqlSparkStreamingContext: OutputOperator@704847355 [0m
+[0m[[0minfo[0m] [0m  SelectOperator@118672281 Vector(6)[0m
+[0m[[0minfo[0m] [0m    GroupByOperator@1660202351 keys:Vector() values:Map(0 -> main.scala.GroupByCombiner@2da6852a)[0m
+[0m[[0minfo[0m] [0m      SelectOperator@259039184 Vector(0, 5, 1, 2, 3, 4)[0m
+[0m[[0minfo[0m] [0m        InnerJoinOperatorSet@434614380 [0m
+[0m[[0minfo[0m] [0m0:InnerJoinOperator@656637489 Vector((0,2)) Sel:1.0[0m
+[0m[[0minfo[0m] [0m1:InnerJoinOperator@722213019 Vector((0,4)) Sel:1.0[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m          ParseOperator@187815690 Vector((int,0), (int,1))[0m
+[0m[[0minfo[0m] [0m          ParseOperator@1964824387 Vector((int,2), (int,3))[0m
+[0m[[0minfo[0m] [0m          ParseOperator@947432390 Vector((int,4), (int,5))[0m
+[0m[[0minfo[0m] [0m[0m
 [0m[[0minfo[0m] [0mFinal Operator Graph[0m
-[0m[[0minfo[0m] [0mOutputOperator@21535536 [0m
-[0m[[0minfo[0m] [0m  SelectOperator@1657680272 Vector(6)[0m
-[0m[[0minfo[0m] [0m    GroupByOperator@1326978973 keys:Vector() values:Map(0 -> main.scala.GroupByCombiner@36b66cfc)[0m
-[0m[[0minfo[0m] [0m      SelectOperator@44904564 Vector(0, 5, 1, 2, 3, 4)[0m
-[0m[[0minfo[0m] [0m        InnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0m          InnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0m            ParseOperator@1179500003 Vector((int,0), (int,1))[0m
-[0m[[0minfo[0m] [0m            ParseOperator@435004964 Vector((int,2), (int,3))[0m
-[0m[[0minfo[0m] [0m          ParseOperator@1094095560 Vector((int,4), (int,5))[0m
+[0m[[0minfo[0m] [0mOutputOperator@704847355 [0m
+[0m[[0minfo[0m] [0m  SelectOperator@118672281 Vector(6)[0m
+[0m[[0minfo[0m] [0m    GroupByOperator@1660202351 keys:Vector() values:Map(0 -> main.scala.GroupByCombiner@2da6852a)[0m
+[0m[[0minfo[0m] [0m      SelectOperator@259039184 Vector(0, 5, 1, 2, 3, 4)[0m
+[0m[[0minfo[0m] [0m        InnerJoinOperatorSet@434614380 [0m
+[0m[[0minfo[0m] [0m0:InnerJoinOperator@656637489 Vector((0,2)) Sel:1.0[0m
+[0m[[0minfo[0m] [0m1:InnerJoinOperator@722213019 Vector((0,4)) Sel:1.0[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m[0m
+[0m[[0minfo[0m] [0m          ParseOperator@187815690 Vector((int,0), (int,1))[0m
+[0m[[0minfo[0m] [0m          ParseOperator@1964824387 Vector((int,2), (int,3))[0m
+[0m[[0minfo[0m] [0m          ParseOperator@947432390 Vector((int,4), (int,5))[0m
 [0m[[0minfo[0m] [0m~~~~~~~~~~~~~x.mean = 0[0m
-[0m[[0minfo[0m] [0mrunning 1386028120000 ms[0m
-[0m[[0minfo[0m] [0mList(214879)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47516973372799E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:4649 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028121000 ms[0m
-[0m[[0minfo[0m] [0mList(176052)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47521624698908E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1761 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028122000 ms[0m
-[0m[[0minfo[0m] [0mList(196136)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47523386131919E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1690 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028123000 ms[0m
-[0m[[0minfo[0m] [0mList(286627)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.4752507621022E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:2060 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028124000 ms[0m
-[0m[[0minfo[0m] [0mList(235961)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47527137155523E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1635 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028125000 ms[0m
-[0m[[0minfo[0m] [0mList(267551)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47528772440317E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1652 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028126000 ms[0m
-[0m[[0minfo[0m] [0mList(234615)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47530425077592E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1531 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028127000 ms[0m
-[0m[[0minfo[0m] [0mList(226785)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47531956111952E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1572 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028128000 ms[0m
-[0m[[0minfo[0m] [0mList(227130)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47533528535621E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1612 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028129000 ms[0m
-[0m[[0minfo[0m] [0m~~~~~~~~~~~~~x.mean = 15[0m
-[0m[[0minfo[0m] [0mList(233105)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47535140648653E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1665 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028130000 ms[0m
-[0m[[0minfo[0m] [0mList(280072)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47536806441086E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1667 Avg:NaN[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028131000 ms[0m
-[0m[[0minfo[0m] [0mList(192775)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47538474206821E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1510 Avg:1510.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028132000 ms[0m
-[0m[[0minfo[0m] [0mList(157343)[0m
-[0m[[0minfo[0m] [0moptimization time in ms:-8.47539985061515E8[0m
-[0m[[0minfo[0m] [0mexecution time in ms:1466 Avg:1488.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@56034827 Vector((0,2)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mInnerJoinOperator@944247051 Vector((0,4)) Sel:1.0[0m
-[0m[[0minfo[0m] [0mrunning 1386028133000 ms[0m
+[0m[[0minfo[0m] [0mrunning 1386030064000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:1.0[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:1.0[0m
+[0m[[0minfo[0m] [0mList(42728)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.4946095956686E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:3404 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:1.0[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.003074[0m
+[0m[[0minfo[0m] [0mrunning 1386030065000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.003074[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:1.0[0m
+[0m[[0minfo[0m] [0mList(50146)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49464371233127E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:775 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.013899804814573846[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.002683[0m
+[0m[[0minfo[0m] [0mrunning 1386030066000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.002683[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.013899804814573846[0m
+[0m[[0minfo[0m] [0mList(53718)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49465151515269E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:516 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.016554083204930663[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.003245[0m
+[0m[[0minfo[0m] [0mrunning 1386030067000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.003245[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.016554083204930663[0m
+[0m[[0minfo[0m] [0mList(45158)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49465677313305E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:471 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.016273153153153152[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.002775[0m
+[0m[[0minfo[0m] [0mrunning 1386030068000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.002775[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.016273153153153152[0m
+[0m[[0minfo[0m] [0mList(44357)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49466153512426E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:806 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.015348442906574394[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.00289[0m
+[0m[[0minfo[0m] [0mrunning 1386030069000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.00289[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.015348442906574394[0m
+[0m[[0minfo[0m] [0mList(73852)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49466961800365E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:456 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.01963626695027918[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.003761[0m
+[0m[[0minfo[0m] [0mrunning 1386030070000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.003761[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.01963626695027918[0m
+[0m[[0minfo[0m] [0mList(39742)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49467421019583E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:353 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.014514974433893353[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.002738[0m
+[0m[[0minfo[0m] [0mrunning 1386030071000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.002738[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.014514974433893353[0m
+[0m[[0minfo[0m] [0mList(52903)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49467922154134E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:389 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.016328086419753085[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.00324[0m
+[0m[[0minfo[0m] [0mrunning 1386030072000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.00324[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.016328086419753085[0m
+[0m[[0minfo[0m] [0mList(43676)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49468927496675E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:368 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.016328086419753085[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.003253[0m
+[0m[[0minfo[0m] [0mrunning 1386030073000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.003253[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.01342637565324316[0m
+[0m[[0minfo[0m] [0mList(69700)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49469918436908E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:428 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.022600518806744487[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.003084[0m
+[0m[[0minfo[0m] [0mrunning 1386030074000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.003084[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.022600518806744487[0m
+[0m[[0minfo[0m] [0mList(46768)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49470925556256E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:499 Avg:NaN[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.014150680786686838[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.003305[0m
+[0m[[0minfo[0m] [0mrunning 1386030075000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.003305[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.014150680786686838[0m
+[0m[[0minfo[0m] [0mList(34457)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49471917117547E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:325 Avg:325.0[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.014150680786686838[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.00218[0m
+[0m[[0minfo[0m] [0mrunning 1386030076000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.00218[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.015805963302752295[0m
+[0m[[0minfo[0m] [0mList(51920)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49472924656153E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:403 Avg:364.0[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.015805963302752295[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.00313[0m
+[0m[[0minfo[0m] [0mrunning 1386030077000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.00313[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.016587859424920127[0m
+[0m[[0minfo[0m] [0mList(41686)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49473916943877E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:361 Avg:363.0[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.016587859424920127[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.002349[0m
+[0m[[0minfo[0m] [0mrunning 1386030078000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.002349[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.017746275010642826[0m
+[0m[[0minfo[0m] [0mList(61036)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49474938534571E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:381 Avg:367.5[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.0200249343832021[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.003048[0m
+[0m[[0minfo[0m] [0mrunning 1386030079000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.003048[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.0200249343832021[0m
+[0m[[0minfo[0m] [0mList(46297)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49475966184088E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:412 Avg:376.4[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.01577410562180579[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.002935[0m
+[0m[[0minfo[0m] [0mrunning 1386030080000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.002935[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.01577410562180579[0m
+[0m[[0minfo[0m] [0mList(51847)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49476924727786E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:346 Avg:371.3333333333333[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.018956855575868372[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.002735[0m
+[0m[[0minfo[0m] [0mrunning 1386030081000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.002735[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.018956855575868372[0m
+[0m[[0minfo[0m] [0mList(52259)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49477923827592E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:442 Avg:381.42857142857144[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.015745405242542934[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.003319[0m
+[0m[[0minfo[0m] [0mrunning 1386030082000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.003319[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.015745405242542934[0m
+[0m[[0minfo[0m] [0mList(56472)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49478920922792E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:370 Avg:380.0[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.019143050847457627[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.00295[0m
+[0m[[0minfo[0m] [0mrunning 1386030083000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.00295[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.019143050847457627[0m
+[0m[[0minfo[0m] [0mList(49346)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49479917694886E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:341 Avg:375.6666666666667[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.01783375496928081[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.002767[0m
+[0m[[0minfo[0m] [0m~~~~~~~~~~~~~x.mean = 30[0m
+[0m[[0minfo[0m] [0mrunning 1386030084000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.002767[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.01783375496928081[0m
+[0m[[0minfo[0m] [0mList(38548)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49480922789219E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:658 Avg:403.9[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.0013757316202712348[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.02802[0m
+[0m[[0minfo[0m] [0mrunning 1386030085000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.0013757316202712348[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.02802[0m
+[0m[[0minfo[0m] [0mList(53027)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49481923369564E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:327 Avg:396.90909090909093[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.003441[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.02802[0m
+[0m[[0minfo[0m] [0mrunning 1386030086000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.003441[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.015410345829700668[0m
+[0m[[0minfo[0m] [0mList(33930)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49482919197214E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:331 Avg:391.4166666666667[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002846[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.011921995783555867[0m
+[0m[[0minfo[0m] [0mrunning 1386030087000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002846[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.011921995783555867[0m
+[0m[[0minfo[0m] [0mList(38071)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49483923525988E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:296 Avg:384.0769230769231[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002821[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.011921995783555867[0m
+[0m[[0minfo[0m] [0mrunning 1386030088000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002821[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.01349556894718185[0m
+[0m[[0minfo[0m] [0mList(43896)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49484923482195E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:421 Avg:386.7142857142857[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002956[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.01484979702300406[0m
+[0m[[0minfo[0m] [0mrunning 1386030089000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002956[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.01484979702300406[0m
+[0m[[0minfo[0m] [0mList(48236)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49485924839841E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:358 Avg:384.8[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002838[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.01699647639182523[0m
+[0m[[0minfo[0m] [0mrunning 1386030090000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002838[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.01699647639182523[0m
+[0m[[0minfo[0m] [0mList(41993)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49486921573643E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:300 Avg:379.5[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002608[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.01699647639182523[0m
+[0m[[0minfo[0m] [0mrunning 1386030091000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002608[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.01610161042944785[0m
+[0m[[0minfo[0m] [0mList(43666)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49487942001879E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:307 Avg:375.2352941176471[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002888[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.01610161042944785[0m
+[0m[[0minfo[0m] [0mrunning 1386030092000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002888[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.015119806094182826[0m
+[0m[[0minfo[0m] [0mList(57808)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49488922740193E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:377 Avg:375.3333333333333[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.003254[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.015119806094182826[0m
+[0m[[0minfo[0m] [0mrunning 1386030093000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.003254[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.01776521204671174[0m
+[0m[[0minfo[0m] [0mList(42389)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49489935482893E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:292 Avg:370.94736842105266[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002958[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.014330290736984448[0m
+[0m[[0minfo[0m] [0mrunning 1386030094000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002958[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.014330290736984448[0m
+[0m[[0minfo[0m] [0mList(46061)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49490916924445E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:320 Avg:368.4[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002833[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.016258736321920226[0m
+[0m[[0minfo[0m] [0mrunning 1386030095000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002833[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.016258736321920226[0m
+[0m[[0minfo[0m] [0mList(51144)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49491918716997E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:342 Avg:367.14285714285717[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.003593[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.01423434455886446[0m
+[0m[[0minfo[0m] [0mrunning 1386030096000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.003593[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.01423434455886446[0m
+[0m[[0minfo[0m] [0mList(52593)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49492921514632E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:360 Avg:366.8181818181818[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.003277[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.016049130302105585[0m
+[0m[[0minfo[0m] [0mrunning 1386030097000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.003277[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.016049130302105585[0m
+[0m[[0minfo[0m] [0mList(51682)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49493916688814E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:393 Avg:367.95652173913044[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.003037[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.01701745143233454[0m
+[0m[[0minfo[0m] [0mrunning 1386030098000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.003037[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.01701745143233454[0m
+[0m[[0minfo[0m] [0mList(50737)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49494936395918E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:346 Avg:367.0416666666667[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002988[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.01701745143233454[0m
+[0m[[0minfo[0m] [0mrunning 1386030099000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002988[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.016980254350736277[0m
+[0m[[0minfo[0m] [0mList(46605)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49495923485982E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:311 Avg:364.8[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002898[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.016081780538302278[0m
+[0m[[0minfo[0m] [0mrunning 1386030100000 ms[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@656637489 Vector((0,2)) Sel:0.002898[0m
+[0m[[0minfo[0m] [0mdequeue:InnerJoinOperator@722213019 Vector((0,4)) Sel:0.016081780538302278[0m
+[0m[[0minfo[0m] [0mList(47664)[0m
+[0m[[0minfo[0m] [0moptimization time in ms:-8.49496923927968E8[0m
+[0m[[0minfo[0m] [0mexecution time in ms:297 Avg:362.1923076923077[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@656637489 Vector((0,2)) Sel:0.002959[0m
+[0m[[0minfo[0m] [0mInnerJoinOperator@722213019 Vector((0,4)) Sel:0.016081780538302278[0m
