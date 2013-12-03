@@ -686,7 +686,7 @@ class InnerJoinOperator(parentOp1 : Operator,
             val rdd1Acc = parentCtx.ssc.sparkContext.accumulator(0L)
             val rdd2Acc = parentCtx.ssc.sparkContext.accumulator(0L)
 
-            joined.persist().foreach(l => joinAcc += 1)
+            joined.foreach(l => joinAcc += 1)
             rdd1.foreach(l => rdd1Acc += 1)
             rdd2.foreach(l => rdd2Acc += 1)
 
