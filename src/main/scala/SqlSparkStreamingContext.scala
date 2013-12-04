@@ -23,6 +23,7 @@ class SqlSparkStreamingContext(master: String,
                                sparkHome: String = null,
                                jars: Seq[String] = Nil,
                                environment: Map[String, String] = Map()) extends Logging {
+  //System.setProperty("spark.cleaner.ttl", "60")
   val ssc = new StreamingContext(master, appName, batchDuration,sparkHome, jars, environment)
 
   val defaultStorageLevel = org.apache.spark.storage.StorageLevel.MEMORY_ONLY_SER
