@@ -6,6 +6,8 @@ import java.util.Random
 import scala.collection.mutable
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
+import scala.io._
+import scala.collection.mutable.ArrayBuffer
 
 
 class TextStreamQueue (sc : SparkContext,
@@ -19,6 +21,35 @@ class TextStreamQueue (sc : SparkContext,
     val mean = this.mean
     val recordsPerBatch = this.recordsPerBatch
     sc.makeRDD(1 to recordsPerBatch, 5).map(i => ("" + (scala.util.Random.nextGaussian() * sd + mean).toInt + "," + 1))
+  }
+
+  override def size = 1
+
+}
+
+
+class FileStreamQueue (sc : SparkContext, file: String, var secPerBatch : Int  ) extends mutable.Queue[RDD[String]]{
+
+  val f = Source.fromFile(file)
+
+  val iter = f.getLines()
+
+  override def dequeue() : RDD[String] = {
+    var startTime = 99999999
+
+    var records = ArrayBuffer[String]()
+
+    var time = 0
+
+    while(iter.hasNext && secPerBatch > time -startTime){
+      val line = iter.next()
+      time = line.split(",")(1).toInt
+      if(startTime == 99999999)
+        startTime = time
+      records += line
+    }
+    println("Generated " + records.size + " Records")
+    sc.makeRDD(records, 5)
   }
 
   override def size = 1

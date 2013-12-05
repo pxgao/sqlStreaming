@@ -14,7 +14,7 @@ class SelectStatement(s : Map[String,Any]) {
   override def toString = sql.toString()
 }
 
-class InputStatement(i : String, p : Int, d : String, c : Map[String, String] ){
+class InputStatement(i : String, p : Int, d : String, c : List[(String, String)] ){
   val ip = i
   val port = p
   val dilimiter = d
@@ -147,7 +147,7 @@ class SqlParser extends JavaTokenParsers {
 
   def input_statement : Parser[InputStatement] =
     "input"~repsep(identifier~":"~dataType, ",")~"from"~iAddress~":"~integer~"delimiter"~delimiter ^^
-      {case "input"~c~"from"~i~":"~p~"delimiter"~d => new InputStatement(i,p.i,d,c.map(i => (i._1._1.name,i._2)).toMap)}
+      {case "input"~c~"from"~i~":"~p~"delimiter"~d => new InputStatement(i,p.i,d,c.map(i => (i._1._1.name,i._2)))}
 
   def output_statement : Parser[OutputStatement] =
     "output"~repsep(identifier, ",")~"from"~identifier~"delimiter"~delimiter ^^

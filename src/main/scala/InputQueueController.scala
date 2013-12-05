@@ -12,7 +12,7 @@ import org.apache.spark.SparkContext
  * To change this template use File | Settings | File Templates.
  */
 class InputQueueController(sc : SparkContext) extends Runnable{
-  val inputQueues = mutable.Map[Int, TextStreamQueue]()
+  val inputQueues = mutable.Map[Int, mutable.Queue[RDD[String]]]()
 
   val p = 2000
 
@@ -25,6 +25,8 @@ class InputQueueController(sc : SparkContext) extends Runnable{
   inputQueues += 9999 -> new TextStreamQueue(sc, m1, 10, 100)
   inputQueues += 9998 -> new TextStreamQueue(sc, m1, 10, 100)
   inputQueues += 9997 -> new TextStreamQueue(sc, m2, 10, 1000)
+  //inputQueues += 8888 -> new FileStreamQueue(sc,"data/test.dat", 1000)
+  inputQueues += 8888 -> new FileStreamQueue(sc,"data/datafile3hours_filtered.dat", 5)
 
 
   def run() {
@@ -32,11 +34,11 @@ class InputQueueController(sc : SparkContext) extends Runnable{
 
     while(true){
       if(count%(p*2) == 0){
-        inputQueues(9999).mean = m1
+        inputQueues(9999).asInstanceOf[TextStreamQueue].mean = m1
         println("~~~~~~~~~~~~~x.mean = " + m1)
       }
       if(count%(p*2) == p){
-        inputQueues(9999).mean = m2
+        inputQueues(9999).asInstanceOf[TextStreamQueue].mean = m2
         println("~~~~~~~~~~~~~x.mean = " + m2)
       }
       count +=1

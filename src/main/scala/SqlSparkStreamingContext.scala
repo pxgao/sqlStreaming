@@ -23,6 +23,9 @@ class SqlSparkStreamingContext(master: String,
                                sparkHome: String = null,
                                jars: Seq[String] = Nil,
                                environment: Map[String, String] = Map()) extends Logging {
+
+
+
   val ssc = new StreamingContext(master, appName, batchDuration,sparkHome, jars, environment)
 
   val defaultStorageLevel = org.apache.spark.storage.StorageLevel.MEMORY_ONLY_SER
@@ -154,11 +157,12 @@ class SqlSparkStreamingContext(master: String,
     case (t:Identifier, s:InputStatement) => {
       socketTextStream(s.ip, s.port, t.name + "_input")
 
-      val nameTypeGID = s.column.map(tp => (tp._1,(tp._2, columns.getGlobalColId))).toMap
-      val schema = new Schema(nameTypeGID.values.toIndexedSeq)
+      val nameTypeGID = s.column.map(tp => (tp._1,(tp._2, columns.getGlobalColId)))
+
+      val schema = new Schema(nameTypeGID.map(tp => tp._2).toIndexedSeq)
       val operator = new ParseOperator(schema, s.dilimiter, t.name + "_input",this)
 
-      tables += t.name -> new Table(nameTypeGID, operator)
+      tables += t.name -> new Table(nameTypeGID.toMap, operator)
     }
     case o:OutputStatement =>{
       new OutputOperator(tables(o.table).getSinkOperator, tables(o.table).getTypeGIDFromName.map(tp => tp._2._2).toIndexedSeq, this)
@@ -454,7 +458,7 @@ class Execution(time:Time, inputRdds :scala.collection.mutable.Map[String, RDD[S
 
 
 class Schema (schemaArray : IndexedSeq[(String, Int)]) extends Serializable{
-  //schamaArray is an array of (className, globalID)
+  //schamaArray is an array of (typeName, globalID)
   val getClassFromLocalColId = schemaArray.zipWithIndex.map(kvp => (kvp._2,kvp._1._1)).toMap
   val getLocalIdFromGlobalId = schemaArray.zipWithIndex.map(kvp => (kvp._1._2, kvp._2)).toMap
   val getClassFromGlobalId = schemaArray.map(tp => (tp._2,tp._1)).toMap

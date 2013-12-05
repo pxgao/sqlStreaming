@@ -374,6 +374,7 @@ class GroupByOperator(parentOp : Operator,
     val rdd = parentOperators.head.execute(exec)
 
 
+    //.printRDD(rdd)
 
     if(windowSize == 1){
       val kvpRdd = rdd.map(record => (
@@ -381,12 +382,16 @@ class GroupByOperator(parentOp : Operator,
         localFunctions.map(kvp => record(kvp._1)).toIndexedSeq)
       )
 
-      kvpRdd.combineByKey[IndexedSeq[Any]](
+      val t = kvpRdd.combineByKey[IndexedSeq[Any]](
         (x : IndexedSeq[Any]) => createCombiner(x,localValueFunctions),
         (x : IndexedSeq[Any],y : IndexedSeq[Any])=>mergeValue(x,y,localValueFunctions),
         (x : IndexedSeq[Any],y : IndexedSeq[Any])=>mergeCombiners(x,y,localValueFunctions),
         partitioner
-      ).mapValues(finalProcessing(_,localValueFunctions))
+      )
+
+      //SqlHelper.printRDD(t)
+
+      t.mapValues(finalProcessing(_,localValueFunctions))
         .map(kvp => kvp._1 ++ kvp._2)
     }else{
       val grouped = groupBy(rdd)
@@ -649,8 +654,12 @@ class InnerJoinOperator(parentOp1 : Operator,
       .partitionBy(this.partitioner)
       .persist(this.parentCtx.defaultStorageLevel)
 
+
+
+
+
     val rightParentResult = parentOperators(1).execute(exec)
-      .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+      .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
       .partitionBy(this.partitioner)
       .persist(this.parentCtx.defaultStorageLevel)
 
