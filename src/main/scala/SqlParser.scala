@@ -260,7 +260,7 @@ class SqlParser extends JavaTokenParsers {
 
   def stringValue : Parser[StringValue] = """"[.]*"""".r ^^ (a => new StringValue(a.substring(1).substring(0,a.length-2)))
 
-	def identifier : Parser[Identifier] = """[a-zA-Z]+""".r ^^
+	def identifier : Parser[Identifier] = """[a-zA-Z0-9]+""".r ^^
 		(a => new Identifier(a))
 
   def delimiter : Parser[String] = """"[^"]+"""".r ^^
