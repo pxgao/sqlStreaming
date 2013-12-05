@@ -114,7 +114,7 @@ class SqlSparkStreamingContext(master: String,
 
 
   def processBatch(time:Time, rdds : scala.collection.mutable.Map[String, RDD[String]]){
-    println("running " + time)
+    println("running " + time + " Batch:" + batchCount)
 
     //rdds.foreach(tp => println(time + " " +tp._2.count()))
 
