@@ -640,9 +640,10 @@ class InnerJoinOperator(parentOp1 : Operator,
 
   var oldRecords : RDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))] =
     this.parentCtx.ssc.sparkContext.makeRDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))](Seq(), 5).partitionBy(this.partitioner)
+  var execCounter = 0
 
   override def execute(exec : Execution) : RDD[IndexedSeq[Any]] = {
-
+    execCounter += 1
 
     val localJoinCondition = this.localJoinCondition
 
@@ -678,6 +679,9 @@ class InnerJoinOperator(parentOp1 : Operator,
     oldRecords = oldRecords.filter(tp => tp._2._2 > currTime)
 
     oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew)).persist(this.parentCtx.defaultStorageLevel)
+
+    if(execCounter % 10 == 0)
+      oldRecords.checkpoint()
 
     oldRecords.map(_._2._1)
   }

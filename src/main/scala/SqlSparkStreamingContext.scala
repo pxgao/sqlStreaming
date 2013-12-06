@@ -25,6 +25,10 @@ class SqlSparkStreamingContext(master: String,
                                environment: Map[String, String] = Map()) extends Logging {
   //System.setProperty("spark.cleaner.ttl", "60")
   val ssc = new StreamingContext(master, appName, batchDuration,sparkHome, jars, environment)
+  if(ssc.sparkContext.sparkHome.contains("spark://"))
+    ssc.sparkContext.setCheckpointDir("hdfs://ec2-67-202-49-43.compute-1.amazonaws.com:9000/tmp/", true)
+  else
+    ssc.sparkContext.setCheckpointDir("tmp/", true)
 
   val defaultStorageLevel = org.apache.spark.storage.StorageLevel.MEMORY_ONLY_SER
 
@@ -112,7 +116,7 @@ class SqlSparkStreamingContext(master: String,
 
 
   def processBatch(time:Time, rdds : scala.collection.mutable.Map[String, RDD[String]]){
-    println("running " + time)
+    println("running " + time + " batchCount")
 
     //rdds.foreach(tp => println(time + " " +tp._2.count()))
 
@@ -407,7 +411,6 @@ class SqlSparkStreamingContext(master: String,
     SqlHelper.results = new PrintWriter(new File("results/" + args(1)  + ".txt" ))
     val parsedLines = parser.parseFile("sql.txt")
     parsedLines.foreach(p => executeQuery(p) )
-
 
 
     print(this.operatorGraph.toString())
