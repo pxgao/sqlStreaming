@@ -55,3 +55,33 @@ class FileStreamQueue (sc : SparkContext, file: String, var secPerBatch : Int  )
   override def size = 1
 
 }
+
+
+
+
+class TwitterStreamQueue (sc : SparkContext, file: String, var recPerBatch : Int  ) extends mutable.Queue[RDD[String]]{
+
+  var f = Source.fromFile(file)
+
+  var iter = f.getLines()
+
+  override def dequeue() : RDD[String] = {
+    var count = 0
+    var records = ArrayBuffer[String]()
+
+
+    while(count < recPerBatch ){
+      if(!iter.hasNext){
+        f = Source.fromFile(file)
+        iter = f.getLines()
+      }
+      records += iter.next
+      count += 1
+    }
+    println("TwitterStream: Generated " + records.size + " Records")
+    sc.makeRDD(records, 5)
+  }
+
+  override def size = 1
+
+}

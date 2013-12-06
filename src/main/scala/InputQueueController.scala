@@ -27,6 +27,7 @@ class InputQueueController(sc : SparkContext) extends Runnable{
   inputQueues += 9997 -> new TextStreamQueue(sc, m2, 10, 1000)
   //inputQueues += 8888 -> new FileStreamQueue(sc,"data/test.dat", 1000)
   inputQueues += 8888 -> new FileStreamQueue(sc,"data/datafile3hours_filtered.dat", 5)
+  inputQueues += 7777 -> new TwitterStreamQueue(sc,"data/twitter/twitterstream.txt", 5000)
 
 
   def run() {
