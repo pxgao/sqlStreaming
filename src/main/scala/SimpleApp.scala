@@ -8,7 +8,7 @@ object SimpleApp {
     val logFile = "../incubator-spark/README.md" // Should be some file on your system
     val sc = new SparkContext(args(0), "Simple App", "../incubator-spark/",  Seq("./target/scala-2.9.3/sql-streaming_2.9.3-1.0.jar"))
 
-    if(sc.sparkHome.contains("spark://")){
+    if(!sc.isLocal){
       sc.setCheckpointDir("hdfs://ec2-67-202-49-43.compute-1.amazonaws.com:9000/tmp/", true)
       println("Setting checkpoint hdfs dir")
     }

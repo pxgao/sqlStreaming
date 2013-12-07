@@ -680,8 +680,10 @@ class InnerJoinOperator(parentOp1 : Operator,
 
     oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew)).persist(this.parentCtx.defaultStorageLevel)
 
-    if(execCounter % 10 == 0)
+    if(execCounter % 10 == 0){
+      logInfo("Checkpointing RDD: " + oldRecords)
       oldRecords.checkpoint()
+    }
 
     oldRecords.map(_._2._1)
   }
