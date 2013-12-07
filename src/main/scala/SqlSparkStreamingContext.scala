@@ -25,10 +25,14 @@ class SqlSparkStreamingContext(master: String,
                                environment: Map[String, String] = Map()) extends Logging {
   //System.setProperty("spark.cleaner.ttl", "60")
   val ssc = new StreamingContext(master, appName, batchDuration,sparkHome, jars, environment)
-  if(ssc.sparkContext.sparkHome.contains("spark://"))
+  if(ssc.sparkContext.sparkHome.contains("spark://")){
     ssc.sparkContext.setCheckpointDir("hdfs://ec2-67-202-49-43.compute-1.amazonaws.com:9000/tmp/", true)
-  else
+    logInfo("Setting checkpoint hdfs dir")
+  }
+  else{
     ssc.sparkContext.setCheckpointDir("tmp/", true)
+    logInfo("Setting checkpoint local dir")
+  }
 
   val defaultStorageLevel = org.apache.spark.storage.StorageLevel.MEMORY_ONLY_SER
 
