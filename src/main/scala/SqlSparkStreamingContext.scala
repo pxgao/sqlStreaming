@@ -30,11 +30,11 @@ class SqlSparkStreamingContext(master: String,
     logInfo("Setting checkpoint hdfs dir")
   }
   else{
-    ssc.sparkContext.setCheckpointDir("/home/peter/sqlStreaming/tmp/\"", true)
+    ssc.sparkContext.setCheckpointDir("/home/peter/sqlStreaming/tmp/", true)
     logInfo("Setting checkpoint local dir")
   }
 
-  val defaultStorageLevel = org.apache.spark.storage.StorageLevel.MEMORY_ONLY_SER
+  val defaultStorageLevel = org.apache.spark.storage.StorageLevel.MEMORY_ONLY
 
   val inputStreams = scala.collection.mutable.Map[String, DStream[String]]()
 

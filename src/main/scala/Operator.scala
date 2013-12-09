@@ -715,6 +715,7 @@ class InnerJoinOperator(parentOp1 : Operator,
 
       //val start3 = System.currentTimeMillis()
       oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew)).persist(this.parentCtx.defaultStorageLevel)
+
       //oldRecords = unionByCogroup(Seq(oldRecords, leftNew, rightNew)).persist(this.parentCtx.defaultStorageLevel)
 
       if(execCounter % 10 == 0){
