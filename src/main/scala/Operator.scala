@@ -647,45 +647,114 @@ class InnerJoinOperator(parentOp1 : Operator,
 
     val localJoinCondition = this.localJoinCondition
 
-    val currTime = exec.getTime
-    val leftTTL = currTime + this.parentCtx.getBatchDuration * leftWindowSize
-    val rightTTL = currTime + this.parentCtx.getBatchDuration * rightWindowSize
 
-    val leftParentResult = parentOperators(0).execute(exec)
-      .map(record => (localJoinCondition.value.map(tp => record(tp._1)),(record, leftTTL)))
-      .partitionBy(this.partitioner)
-      .persist(this.parentCtx.defaultStorageLevel)
 
-    val rightParentResult = parentOperators(1).execute(exec)
-      .map(record => (localJoinCondition.value.map(tp => record(tp._1)),(record, rightTTL)))
-      .partitionBy(this.partitioner)
-      .persist(this.parentCtx.defaultStorageLevel)
+    if(parentCtx.args.contains("-incre_join")){
+      val currTime = exec.getTime
+      val leftTTL = currTime + this.parentCtx.getBatchDuration * leftWindowSize
+      val rightTTL = currTime + this.parentCtx.getBatchDuration * rightWindowSize
 
-    leftShuffleCache = leftShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * leftWindowSize)
-    rightShuffleCache = rightShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * rightWindowSize)
 
-    leftShuffleCache += exec.getTime -> leftParentResult
+      val leftParentResult = parentOperators(0).execute(exec)
+        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),(record, leftTTL)))
+        .partitionBy(this.partitioner)
+        .persist(this.parentCtx.defaultStorageLevel)
 
-    val rightNew = join(rightParentResult, new PartitionerAwareUnionRDD(leftShuffleCache.values.head.sparkContext, leftShuffleCache.values.toArray.toSeq))
+      val rightParentResult = parentOperators(1).execute(exec)
+        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),(record, rightTTL)))
+        .partitionBy(this.partitioner)
+        .persist(this.parentCtx.defaultStorageLevel)
 
-    val leftNew : RDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))] =
-    if(rightShuffleCache.size > 0)
-      join(leftParentResult, new PartitionerAwareUnionRDD( this.parentCtx.ssc.sparkContext, rightShuffleCache.values.toArray.toSeq))
-    else
-      this.parentCtx.ssc.sparkContext.makeRDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))](Seq(), 5).partitionBy(this.partitioner)
+      leftShuffleCache = leftShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * leftWindowSize)
+      rightShuffleCache = rightShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * rightWindowSize)
 
-    rightShuffleCache += exec.getTime -> rightParentResult
 
-    oldRecords = oldRecords.filter(tp => tp._2._2 > currTime)
+      leftShuffleCache += exec.getTime -> leftParentResult
 
-    oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew)).persist(this.parentCtx.defaultStorageLevel)
 
-    if(execCounter % 10 == 0){
-      logInfo("Checkpointing RDD: " + oldRecords)
-      oldRecords.checkpoint()
+      val leftUnion = new PartitionerAwareUnionRDD(leftShuffleCache.values.head.sparkContext, leftShuffleCache.values.toArray.toSeq)
+      //leftUnion.persist(this.parentCtx.defaultStorageLevel)
+      //println(leftUnion.count)
+      //println(rightParentResult.count())
+      //val start = System.currentTimeMillis()
+
+      val rightNew = joinWithTime(rightParentResult, leftUnion)
+      //rightNew.persist(this.parentCtx.defaultStorageLevel)
+      //println(rightNew.count())
+      //logDebug("getRightNew:" + (System.currentTimeMillis() - start) )
+
+      val leftNew : RDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))] =
+        if(rightShuffleCache.size > 0){
+          val rightUnion = new PartitionerAwareUnionRDD( this.parentCtx.ssc.sparkContext, rightShuffleCache.values.toArray.toSeq)
+          //rightUnion.persist(this.parentCtx.defaultStorageLevel)
+          //println(rightUnion.count)
+          //println(leftParentResult.count)
+          //val start1 = System.currentTimeMillis()
+          val joinRes = joinWithTime(leftParentResult, rightUnion)
+          //joinRes.persist(this.parentCtx.defaultStorageLevel)
+          //println(joinRes.count)
+          //logDebug("leftNew:" + (System.currentTimeMillis() - start1))
+          joinRes
+        }
+        else
+          this.parentCtx.ssc.sparkContext.makeRDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))](Seq(), 5).partitionBy(this.partitioner)
+
+      rightShuffleCache += exec.getTime -> rightParentResult
+
+      //logInfo("RDD oldRecords: " + oldRecords + " @ " + oldRecords.getCheckpointFile + " Success?" + oldRecords.isCheckpointed)
+
+      //val start2 = System.currentTimeMillis()
+      //println(oldRecords.getStorageLevel)
+      //println("is check:" + oldRecords.isCheckpointed)
+
+      oldRecords = oldRecords.filter(tp => tp._2._2 > currTime)
+      //oldRecords.persist(this.parentCtx.defaultStorageLevel)
+      //println(oldRecords.count())
+      //logDebug("filter:"+(System.currentTimeMillis() - start2))
+
+
+      //val start3 = System.currentTimeMillis()
+      oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew)).persist(this.parentCtx.defaultStorageLevel)
+      //oldRecords = unionByCogroup(Seq(oldRecords, leftNew, rightNew)).persist(this.parentCtx.defaultStorageLevel)
+
+      if(execCounter % 10 == 0){
+        oldRecords.checkpoint()
+        logInfo("Checkpointing RDD: " + oldRecords + " to " + oldRecords.getCheckpointFile + " Success?" + oldRecords.isCheckpointed)
+      }
+
+      //println(oldRecords.count())
+      //logDebug("final union" + (System.currentTimeMillis() - start3))
+
+      oldRecords.map(_._2._1)
+    }else{
+      val leftParentResult = parentOperators(0).execute(exec)
+        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+        .partitionBy(this.partitioner)
+
+      val rightParentResult = parentOperators(1).execute(exec)
+        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
+        .partitionBy(this.partitioner)
+
+      join(leftParentResult, rightParentResult)
     }
 
-    oldRecords.map(_._2._1)
+
+  }
+
+  def unionByCogroup[K : ClassManifest, V : ClassManifest](rdds : Seq[RDD[(K,V)]]) = {
+    require(rdds.length >= 2 && rdds.length <=3, "Only support 2 or 3 input RDDs")
+    require(rdds.map(_.partitioner).distinct.toSet.size == 1, "All input RDD must have the same partitioner" + rdds.map(_.partitioner))
+    require(rdds.map(_.partitions.length).distinct.toSet.size == 1, "All input RDD must have the same number of partitions" + rdds.map(_.partitions.length))
+
+    val cogrouped : RDD[(K, Seq[V])] =
+      if(rdds.length == 2){
+        rdds.head.cogroup(rdds.tail.head).mapValues(tp => tp._1 ++ tp._2)
+      }else{
+        rdds.head.cogroup(rdds.tail.head, rdds.tail.tail.head).mapValues(tp => tp._1 ++ tp._2 ++ tp._3)
+      }
+
+    val result = cogrouped.mapPartitions(iter => iter.flatMap(kvp => kvp._2.map(value => (kvp._1, value))), true)
+    result
   }
 
   def hashedJoin(left : RDD[mutable.HashMap[IndexedSeq[Any], ArrayBuffer[IndexedSeq[Any]]]],
@@ -705,7 +774,7 @@ class InnerJoinOperator(parentOp1 : Operator,
   }
 
 
-  def join(leftPartitioned : RDD[(IndexedSeq[Any],(IndexedSeq[Any], Time))],
+  def joinWithTime(leftPartitioned : RDD[(IndexedSeq[Any],(IndexedSeq[Any], Time))],
            rightPartitioned : RDD[(IndexedSeq[Any],(IndexedSeq[Any], Time))], getStat : Boolean = false) = {
 
     val getLocalIdFromGlobalId = this.getLocalIdFromGlobalId
@@ -736,6 +805,38 @@ class InnerJoinOperator(parentOp1 : Operator,
 
     result
   }
+
+
+  def join(leftPartitioned : RDD[(IndexedSeq[Any],IndexedSeq[Any])],
+           rightPartitioned : RDD[(IndexedSeq[Any],IndexedSeq[Any])], getStat : Boolean = false) = {
+
+    val getLocalIdFromGlobalId = this.getLocalIdFromGlobalId
+    val outputSchema = this.outputSchema
+
+
+
+    val joined = leftPartitioned.join(rightPartitioned)
+    val result = joined.mapPartitions (it => it.map{pair =>
+      val combined = pair._2._1 ++ pair._2._2
+      outputSchema.getSchemaArray.map(kvp => combined(getLocalIdFromGlobalId.value(kvp._2)))
+    }, true
+    )
+
+
+    if(getStat && this.parentCtx.args.contains("-reorder")){
+      //      leftPartitioned.persist(this.parentCtx.defaultStorageLevel)
+      //      rightPartitioned.persist(this.parentCtx.defaultStorageLevel)
+      //      result.persist(this.parentCtx.defaultStorageLevel)
+
+
+
+      getSelectivityActor ! (leftPartitioned,rightPartitioned, result)
+    }
+
+
+    result
+  }
+
 
 
   val getSelectivityActor = actor{

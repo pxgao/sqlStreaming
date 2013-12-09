@@ -30,7 +30,7 @@ class SqlSparkStreamingContext(master: String,
     logInfo("Setting checkpoint hdfs dir")
   }
   else{
-    ssc.sparkContext.setCheckpointDir("tmp/", true)
+    ssc.sparkContext.setCheckpointDir("/home/peter/sqlStreaming/tmp/\"", true)
     logInfo("Setting checkpoint local dir")
   }
 
@@ -134,7 +134,8 @@ class SqlSparkStreamingContext(master: String,
     val exec = new Execution(time,rdds)
 
 
-    operatorGraph.execute(rdd =>  SqlHelper.printRDD(rdd),exec)
+    //operatorGraph.execute(rdd =>  SqlHelper.printRDD(rdd),exec)
+    operatorGraph.execute(rdd =>  println(rdd.count),exec)
 
 
     val timeUsed = (System.currentTimeMillis() - starttime)
