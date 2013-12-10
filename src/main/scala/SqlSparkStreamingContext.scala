@@ -140,7 +140,7 @@ class SqlSparkStreamingContext(master: String,
 
     val timeUsed = (System.currentTimeMillis() - starttime)
 
-    if(batchCount > 10){
+    if(batchCount > args(2).toInt){
       timeSum += timeUsed
       usedCount += 1
     }
