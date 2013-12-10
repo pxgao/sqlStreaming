@@ -654,44 +654,46 @@ class InnerJoinOperator(parentOp1 : Operator,
       val leftTTL = currTime + this.parentCtx.getBatchDuration * leftWindowSize
       val rightTTL = currTime + this.parentCtx.getBatchDuration * rightWindowSize
 
-      println(parentOperators(0).execute(exec).count)
-      println(parentOperators(1).execute(exec).count)
-
-//      val leftParentResult = parentOperators(0).execute(exec)
-//        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),(record, leftTTL)))
-//        .partitionBy(this.partitioner)
-//        .persist(this.parentCtx.defaultStorageLevel)
-//
-//      val rightParentResult = parentOperators(1).execute(exec)
-//        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),(record, rightTTL)))
-//        .partitionBy(this.partitioner)
-//        .persist(this.parentCtx.defaultStorageLevel)
 
 
-//
-//
-//      leftShuffleCache = leftShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * leftWindowSize)
-//      rightShuffleCache = rightShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * rightWindowSize)
-//
-//
-//      leftShuffleCache += exec.getTime -> leftParentResult
-//
-//
-//      val leftUnion = new PartitionerAwareUnionRDD(leftShuffleCache.values.head.sparkContext, leftShuffleCache.values.toArray.toSeq)
-//
-//
-//      val rightNew = joinWithTime2(rightParentResult, leftUnion)
-//
-//      val leftNew : RDD[(Time, mutable.ListBuffer[IndexedSeq[Any]])] =
-//        if(rightShuffleCache.size > 0){
-//          val rightUnion = new PartitionerAwareUnionRDD( this.parentCtx.ssc.sparkContext, rightShuffleCache.values.toArray.toSeq)
-//          val joinRes = joinWithTime2(leftParentResult, rightUnion)
-//          joinRes
-//        }
-//        else
-//          this.parentCtx.ssc.sparkContext.makeRDD[(Time, mutable.ListBuffer[IndexedSeq[Any]])](Seq(), 5).partitionBy(this.partitioner)
-//
-//      rightShuffleCache += exec.getTime -> rightParentResult
+      val leftParentResult = parentOperators(0).execute(exec)
+        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),(record, leftTTL)))
+        .partitionBy(this.partitioner)
+        .persist(this.parentCtx.defaultStorageLevel)
+
+      val rightParentResult = parentOperators(1).execute(exec)
+        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),(record, rightTTL)))
+        .partitionBy(this.partitioner)
+        .persist(this.parentCtx.defaultStorageLevel)
+
+
+
+
+      leftShuffleCache = leftShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * leftWindowSize)
+      rightShuffleCache = rightShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * rightWindowSize)
+
+
+      leftShuffleCache += exec.getTime -> leftParentResult
+
+
+      val leftUnion = new PartitionerAwareUnionRDD(leftShuffleCache.values.head.sparkContext, leftShuffleCache.values.toArray.toSeq)
+
+
+      val rightNew = joinWithTime2(rightParentResult, leftUnion)
+
+      val leftNew : RDD[(Time, mutable.ListBuffer[IndexedSeq[Any]])] =
+        if(rightShuffleCache.size > 0){
+          val rightUnion = new PartitionerAwareUnionRDD( this.parentCtx.ssc.sparkContext, rightShuffleCache.values.toArray.toSeq)
+          val joinRes = joinWithTime2(leftParentResult, rightUnion)
+          joinRes
+        }
+        else
+          this.parentCtx.ssc.sparkContext.makeRDD[(Time, mutable.ListBuffer[IndexedSeq[Any]])](Seq(), 5).partitionBy(this.partitioner)
+
+      rightShuffleCache += exec.getTime -> rightParentResult
+
+      println(leftNew.count)
+      println(rightNew.count)
 //
 //
 //
