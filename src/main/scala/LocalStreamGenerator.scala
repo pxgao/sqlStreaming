@@ -18,7 +18,7 @@ class TextStreamQueue (sc : SparkContext,
     val sd = this.sd
     val mean = this.mean
     val recordsPerBatch = this.recordsPerBatch
-    sc.makeRDD(1 to recordsPerBatch, 5).map(i => ("" + (scala.util.Random.nextGaussian() * sd + mean).toInt + "," + 1))
+    sc.makeRDD(1 to recordsPerBatch, 5).map(i => ("" + (scala.util.Random.nextGaussian() * sd + mean).toInt + "," + (1 until 50).map(i => "a").mkString("")))
   }
 
   override def size = 1
