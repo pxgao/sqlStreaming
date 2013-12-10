@@ -698,13 +698,13 @@ class InnerJoinOperator(parentOp1 : Operator,
 
       oldRecords = oldRecords.filter(tp => tp._1 > currTime)
 
-      println(leftNew.count)
-      println(rightNew.count)
 
-//
-//      oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew))
-//        .persist(this.parentCtx.defaultStorageLevel)
-//
+
+
+      oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew))
+        .persist(this.parentCtx.defaultStorageLevel)
+
+      println(oldRecords.count)
 //
 //      if(execCounter % 10 == 0){
 //        oldRecords.checkpoint()
