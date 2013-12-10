@@ -654,19 +654,20 @@ class InnerJoinOperator(parentOp1 : Operator,
       val leftTTL = currTime + this.parentCtx.getBatchDuration * leftWindowSize
       val rightTTL = currTime + this.parentCtx.getBatchDuration * rightWindowSize
 
+      println(parentOperators(0).execute(exec).count)
+      println(parentOperators(1).execute(exec).count)
 
-      val leftParentResult = parentOperators(0).execute(exec)
-        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),(record, leftTTL)))
-        .partitionBy(this.partitioner)
-        .persist(this.parentCtx.defaultStorageLevel)
+//      val leftParentResult = parentOperators(0).execute(exec)
+//        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),(record, leftTTL)))
+//        .partitionBy(this.partitioner)
+//        .persist(this.parentCtx.defaultStorageLevel)
+//
+//      val rightParentResult = parentOperators(1).execute(exec)
+//        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),(record, rightTTL)))
+//        .partitionBy(this.partitioner)
+//        .persist(this.parentCtx.defaultStorageLevel)
 
-      val rightParentResult = parentOperators(1).execute(exec)
-        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),(record, rightTTL)))
-        .partitionBy(this.partitioner)
-        .persist(this.parentCtx.defaultStorageLevel)
 
-      println(leftParentResult.count)
-      println(rightParentResult.count)
 //
 //
 //      leftShuffleCache = leftShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * leftWindowSize)
