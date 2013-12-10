@@ -709,7 +709,7 @@ class InnerJoinOperator(parentOp1 : Operator,
 //
 //      oldRecords.flatMap(_._2)
 
-      this.parentCtx.ssc.sparkContext.makeRDD[IndexedSeq[Any]](Seq())
+      this.parentCtx.ssc.sparkContext.makeRDD[IndexedSeq[Any]](Seq(), 5)
     }else{
       val leftParentResult = parentOperators(0).execute(exec)
         .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
