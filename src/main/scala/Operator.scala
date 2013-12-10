@@ -711,12 +711,12 @@ class InnerJoinOperator(parentOp1 : Operator,
         logInfo("Checkpointing RDD: " + oldRecords + " to " + oldRecords.getCheckpointFile + " Success?" + oldRecords.isCheckpointed)
       }
 
-      println(oldRecords.count)
-//
-//
-//      oldRecords.flatMap(_._2)
 
-      this.parentCtx.ssc.sparkContext.makeRDD[IndexedSeq[Any]](Seq(), 5)
+
+      val res = oldRecords.flatMap(_._2)
+
+      println(res.count)
+
     }else{
       val leftParentResult = parentOperators(0).execute(exec)
         .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
@@ -729,7 +729,7 @@ class InnerJoinOperator(parentOp1 : Operator,
       join(leftParentResult, rightParentResult)
     }
 
-
+    this.parentCtx.ssc.sparkContext.makeRDD[IndexedSeq[Any]](Seq(), 5)
   }
 
   def unionByCogroup[K : ClassManifest, V : ClassManifest](rdds : Seq[RDD[(K,V)]]) = {
