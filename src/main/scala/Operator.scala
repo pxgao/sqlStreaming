@@ -705,11 +705,11 @@ class InnerJoinOperator(parentOp1 : Operator,
         .persist(this.parentCtx.defaultStorageLevel)
 
       println(oldRecords.count)
-//
-//      if(execCounter % 10 == 0){
-//        oldRecords.checkpoint()
-//        logInfo("Checkpointing RDD: " + oldRecords + " to " + oldRecords.getCheckpointFile + " Success?" + oldRecords.isCheckpointed)
-//      }
+
+      if(execCounter % 10 == 0){
+        oldRecords.checkpoint()
+        logInfo("Checkpointing RDD: " + oldRecords + " to " + oldRecords.getCheckpointFile + " Success?" + oldRecords.isCheckpointed)
+      }
 //
 //
 //      oldRecords.flatMap(_._2)
