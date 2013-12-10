@@ -28,7 +28,7 @@ class SqlSparkStreamingContext(master: String,
 
   val ssc = new StreamingContext(master, appName, batchDuration,sparkHome, jars, environment)
 
-  val defaultStorageLevel = org.apache.spark.storage.StorageLevel.MEMORY_ONLY_SER
+  val defaultStorageLevel = org.apache.spark.storage.StorageLevel.MEMORY_ONLY
 
   val inputStreams = scala.collection.mutable.Map[String, DStream[String]]()
 
@@ -128,7 +128,7 @@ class SqlSparkStreamingContext(master: String,
     val exec = new Execution(time,rdds)
 
 
-    operatorGraph.execute(rdd =>  SqlHelper.printRDD(rdd),exec)
+    operatorGraph.execute(rdd =>  println(rdd.count),exec)
 
 
     val timeUsed = (System.currentTimeMillis() - starttime)
