@@ -692,13 +692,15 @@ class InnerJoinOperator(parentOp1 : Operator,
 
       rightShuffleCache += exec.getTime -> rightParentResult
 
+
+
+
+
+      oldRecords = oldRecords.filter(tp => tp._1 > currTime)
+
       println(leftNew.count)
       println(rightNew.count)
-//
-//
-//
-//      oldRecords = oldRecords.filter(tp => tp._1 > currTime)
-//
+
 //
 //      oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew))
 //        .persist(this.parentCtx.defaultStorageLevel)
