@@ -638,8 +638,8 @@ class InnerJoinOperator(parentOp1 : Operator,
     }
   }
 
-  var oldRecords : RDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))] =
-    this.parentCtx.ssc.sparkContext.makeRDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))](Seq(), 5).partitionBy(this.partitioner)
+  var oldRecords  =
+    this.parentCtx.ssc.sparkContext.makeRDD[(Time, mutable.ListBuffer[IndexedSeq[Any]])](Seq(), 5).partitionBy(this.partitioner)
   var execCounter = 0
 
   override def execute(exec : Execution) : RDD[IndexedSeq[Any]] = {
@@ -678,26 +678,26 @@ class InnerJoinOperator(parentOp1 : Operator,
       //println(rightParentResult.count())
       //val start = System.currentTimeMillis()
 
-      val rightNew = joinWithTime(rightParentResult, leftUnion)
+      val rightNew = joinWithTime2(rightParentResult, leftUnion)
       //rightNew.persist(this.parentCtx.defaultStorageLevel)
       //println(rightNew.count())
       //logDebug("getRightNew:" + (System.currentTimeMillis() - start) )
 
-      val leftNew : RDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))] =
+      val leftNew : RDD[(Time, mutable.ListBuffer[IndexedSeq[Any]])] =
         if(rightShuffleCache.size > 0){
           val rightUnion = new PartitionerAwareUnionRDD( this.parentCtx.ssc.sparkContext, rightShuffleCache.values.toArray.toSeq)
           //rightUnion.persist(this.parentCtx.defaultStorageLevel)
           //println(rightUnion.count)
           //println(leftParentResult.count)
           //val start1 = System.currentTimeMillis()
-          val joinRes = joinWithTime(leftParentResult, rightUnion)
+          val joinRes = joinWithTime2(leftParentResult, rightUnion)
           //joinRes.persist(this.parentCtx.defaultStorageLevel)
           //println(joinRes.count)
           //logDebug("leftNew:" + (System.currentTimeMillis() - start1))
           joinRes
         }
         else
-          this.parentCtx.ssc.sparkContext.makeRDD[(IndexedSeq[Any], (IndexedSeq[Any], Time))](Seq(), 5).partitionBy(this.partitioner)
+          this.parentCtx.ssc.sparkContext.makeRDD[(Time, mutable.ListBuffer[IndexedSeq[Any]])](Seq(), 5).partitionBy(this.partitioner)
 
       rightShuffleCache += exec.getTime -> rightParentResult
 
@@ -707,14 +707,15 @@ class InnerJoinOperator(parentOp1 : Operator,
       //println(oldRecords.getStorageLevel)
       //println("is check:" + oldRecords.isCheckpointed)
 
-      oldRecords = oldRecords.filter(tp => tp._2._2 > currTime)
+      oldRecords = oldRecords.filter(tp => tp._1 > currTime)
       //oldRecords.persist(this.parentCtx.defaultStorageLevel)
       //println(oldRecords.count())
       //logDebug("filter:"+(System.currentTimeMillis() - start2))
 
 
       //val start3 = System.currentTimeMillis()
-      oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew)).persist(this.parentCtx.defaultStorageLevel)
+      oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew))
+        .persist(this.parentCtx.defaultStorageLevel)
 
       //oldRecords = unionByCogroup(Seq(oldRecords, leftNew, rightNew)).persist(this.parentCtx.defaultStorageLevel)
 
@@ -726,7 +727,7 @@ class InnerJoinOperator(parentOp1 : Operator,
       //println(oldRecords.count())
       //logDebug("final union" + (System.currentTimeMillis() - start3))
 
-      oldRecords.map(_._2._1)
+      oldRecords.flatMap(_._2)
     }else{
       val leftParentResult = parentOperators(0).execute(exec)
         .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
@@ -807,6 +808,28 @@ class InnerJoinOperator(parentOp1 : Operator,
     result
   }
 
+  def joinWithTime2(leftPartitioned : RDD[(IndexedSeq[Any],(IndexedSeq[Any], Time))],
+                   rightPartitioned : RDD[(IndexedSeq[Any],(IndexedSeq[Any], Time))]) = {
+
+    val getLocalIdFromGlobalId = this.getLocalIdFromGlobalId
+    val outputSchema = this.outputSchema
+
+
+    val joined = leftPartitioned.join(rightPartitioned)
+
+    joined.mapPartitions(iter => {
+      val map = mutable.HashMap[Time, mutable.ListBuffer[IndexedSeq[Any]]]()
+      iter.foreach(tp => {
+        val time = tp._2._1._2.min(tp._2._2._2)
+        val combined = tp._2._1._1 ++ tp._2._2._1
+        val value = outputSchema.getSchemaArray.map(kvp => combined(getLocalIdFromGlobalId.value(kvp._2)))
+        if(!map.contains(time))
+          map(time) = mutable.ListBuffer[IndexedSeq[Any]]()
+        map(time) += value
+      })
+      map.iterator
+    }, true)
+  }
 
   def join(leftPartitioned : RDD[(IndexedSeq[Any],IndexedSeq[Any])],
            rightPartitioned : RDD[(IndexedSeq[Any],IndexedSeq[Any])], getStat : Boolean = false) = {
