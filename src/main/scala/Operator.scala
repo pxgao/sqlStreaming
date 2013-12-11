@@ -727,10 +727,10 @@ class InnerJoinOperator(parentOp1 : Operator,
         .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
         .partitionBy(this.partitioner)
 
-      println(leftParentResult.count)
-      println(rightParentResult.count)
+      val res = join(leftParentResult, rightParentResult)
 
-      join(leftParentResult, rightParentResult)
+      println(res.count)
+
     }
 
     this.parentCtx.ssc.sparkContext.makeRDD[IndexedSeq[Any]](Seq(), 5)
