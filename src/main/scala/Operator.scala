@@ -715,7 +715,7 @@ class InnerJoinOperator(parentOp1 : Operator,
 
       val res = oldRecords.flatMap(_._2)
 
-      println(res.count)
+
 
     }else{
       val leftParentResult = parentOperators(0).execute(exec)
@@ -725,6 +725,9 @@ class InnerJoinOperator(parentOp1 : Operator,
       val rightParentResult = parentOperators(1).execute(exec)
         .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
         .partitionBy(this.partitioner)
+
+      println(leftParentResult.count)
+      println(rightParentResult.count)
 
       join(leftParentResult, rightParentResult)
     }
