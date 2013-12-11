@@ -693,27 +693,28 @@ class InnerJoinOperator(parentOp1 : Operator,
       rightShuffleCache += exec.getTime -> rightParentResult
 
 
-
-
-
-      oldRecords = oldRecords.filter(tp => tp._1 > currTime)
-
-
-
-
-      oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew))
-        .persist(this.parentCtx.defaultStorageLevel)
-
-
-
-      if(execCounter % 10 == 0){
-        oldRecords.checkpoint()
-        logInfo("Checkpointing RDD: " + oldRecords + " to " + oldRecords.getCheckpointFile + " Success?" + oldRecords.isCheckpointed)
-      }
-
-
-
-      val res = oldRecords.flatMap(_._2)
+      println(leftNew.count)
+      println(rightNew.count)
+//
+//
+//      oldRecords = oldRecords.filter(tp => tp._1 > currTime)
+//
+//
+//
+//
+//      oldRecords = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext,Seq(oldRecords, leftNew, rightNew))
+//        .persist(this.parentCtx.defaultStorageLevel)
+//
+//
+//
+//      if(execCounter % 10 == 0){
+//        oldRecords.checkpoint()
+//        logInfo("Checkpointing RDD: " + oldRecords + " to " + oldRecords.getCheckpointFile + " Success?" + oldRecords.isCheckpointed)
+//      }
+//
+//
+//
+//      val res = oldRecords.flatMap(_._2)
 
 
 
