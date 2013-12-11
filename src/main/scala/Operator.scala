@@ -648,25 +648,21 @@ class InnerJoinOperator(parentOp1 : Operator,
     val localJoinCondition = this.localJoinCondition
 
 
+    val leftParentResult = parentOperators(0).execute(exec)
+      .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+      .partitionBy(this.partitioner)
+      .persist(this.parentCtx.defaultStorageLevel)
+
+    val rightParentResult = parentOperators(1).execute(exec)
+      .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
+      .partitionBy(this.partitioner)
+      .persist(this.parentCtx.defaultStorageLevel)
+
 
     if(parentCtx.args.contains("-incre_join")){
       val currTime = exec.getTime
       val leftTTL = currTime + this.parentCtx.getBatchDuration * leftWindowSize
       val rightTTL = currTime + this.parentCtx.getBatchDuration * rightWindowSize
-
-
-
-      val leftParentResult = parentOperators(0).execute(exec)
-        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
-        .partitionBy(this.partitioner)
-        .persist(this.parentCtx.defaultStorageLevel)
-
-      val rightParentResult = parentOperators(1).execute(exec)
-        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
-        .partitionBy(this.partitioner)
-        .persist(this.parentCtx.defaultStorageLevel)
-
-
 
 
       leftShuffleCache = leftShuffleCache.filter(tp => tp._1 > exec.getTime )
@@ -717,16 +713,6 @@ class InnerJoinOperator(parentOp1 : Operator,
 
     }else{
 
-      val leftParentResult = parentOperators(0).execute(exec)
-        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
-        .partitionBy(this.partitioner)
-        .persist(this.parentCtx.defaultStorageLevel)
-
-      val rightParentResult = parentOperators(1).execute(exec)
-        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
-        .partitionBy(this.partitioner)
-        .persist(this.parentCtx.defaultStorageLevel)
-
       leftShuffleCache = leftShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * leftWindowSize)
       rightShuffleCache = rightShuffleCache.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * rightWindowSize)
 
@@ -737,8 +723,6 @@ class InnerJoinOperator(parentOp1 : Operator,
       val rightUnion = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext, rightShuffleCache.values.toArray.toSeq)
 
       val res = join(leftUnion, rightUnion)
-
-
 
     }
 

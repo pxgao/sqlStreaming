@@ -439,9 +439,9 @@ class SqlSparkStreamingContext(master: String,
       this.operatorGraph.incrementalGroupBy
     }
 
-    if(this.args.contains("-incre_join")){
-      logInfo("Incremental Join")
-      this.operatorGraph.incrementalJoin
+    if(this.args.contains("-combine_join")){
+      logInfo("Combining window and Join")
+      this.operatorGraph.combineJoin
     }
 
     if(args.contains("-reorder")){
