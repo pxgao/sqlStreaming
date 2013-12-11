@@ -719,17 +719,20 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
     }else{
-      val leftParentResult = parentOperators(0).execute(exec)
-        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
-        .partitionBy(this.partitioner)
+      println(parentOperators(0).execute(exec).count)
+      println(parentOperators(1).execute(exec).count)
+//
+//      val leftParentResult = parentOperators(0).execute(exec)
+//        .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+//        .partitionBy(this.partitioner)
+//
+//      val rightParentResult = parentOperators(1).execute(exec)
+//        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
+//        .partitionBy(this.partitioner)
+//
+//      val res = join(leftParentResult, rightParentResult)
 
-      val rightParentResult = parentOperators(1).execute(exec)
-        .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
-        .partitionBy(this.partitioner)
 
-      val res = join(leftParentResult, rightParentResult)
-
-      println(res.count)
 
     }
 
