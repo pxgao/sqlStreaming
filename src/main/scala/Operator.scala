@@ -707,7 +707,7 @@ class InnerJoinOperator(parentOp1 : Operator,
 
 
 
-      val res = oldRecords.flatMap(_._2)
+      oldRecords.flatMap(_._2)
 
 
 
@@ -722,11 +722,10 @@ class InnerJoinOperator(parentOp1 : Operator,
       val leftUnion = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext, leftShuffleCache.values.toArray.toSeq)
       val rightUnion = new PartitionerAwareUnionRDD(this.parentCtx.ssc.sparkContext, rightShuffleCache.values.toArray.toSeq)
 
-      val res = join(leftUnion, rightUnion)
+      join(leftUnion, rightUnion)
 
     }
 
-    this.parentCtx.ssc.sparkContext.makeRDD[IndexedSeq[Any]](Seq(), 5)
   }
 
   def unionByCogroup[K : ClassManifest, V : ClassManifest](rdds : Seq[RDD[(K,V)]]) = {
