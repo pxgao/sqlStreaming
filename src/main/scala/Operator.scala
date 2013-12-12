@@ -702,7 +702,7 @@ class InnerJoinOperator(parentOp1 : Operator,
 
       if(execCounter % 10 == 0){
         oldRecords.checkpoint()
-        logInfo("Checkpointing RDD: " + oldRecords + " to " + oldRecords.getCheckpointFile + " Success?" + oldRecords.isCheckpointed)
+        logInfo("Checkpoint RDD: " + oldRecords + " to " + oldRecords.getCheckpointFile + " Success?" + oldRecords.isCheckpointed)
       }
 
 
