@@ -394,7 +394,7 @@ class GroupByOperator(parentOp : Operator,
       t.mapValues(finalProcessing(_,localValueFunctions))
         .map(kvp => kvp._1 ++ kvp._2)
     }else{
-      val grouped = groupBy(rdd)
+      val grouped = groupBy(rdd).persist(this.parentCtx.defaultStorageLevel)
 
       cached += exec.getTime -> grouped
       cached = cached.filter(tp => tp._1 > exec.getTime - this.parentCtx.getBatchDuration * windowSize)
@@ -492,6 +492,8 @@ class ParseOperator(schema : Schema,
       }
 
       val lineArr = line.trim.split(delimiter).toIndexedSeq
+
+
 
       if (lineArr.length != outputSchema.getSchemaArray.length){
         IndexedSeq[Any]()
@@ -643,23 +645,31 @@ class InnerJoinOperator(parentOp1 : Operator,
     }
   }
 
+  val joinAcc = parentCtx.ssc.sparkContext.accumulator(0L)
+  val rdd1Acc = parentCtx.ssc.sparkContext.accumulator(0L)
+  val rdd2Acc = parentCtx.ssc.sparkContext.accumulator(0L)
 
   override def execute(exec : Execution) : RDD[IndexedSeq[Any]] = {
+    val joinAcc = this.joinAcc
+    val rdd1Acc = this.rdd1Acc
+    val rdd2Acc = this.rdd2Acc
 
+    joinAcc.setValue(0)
+    rdd1Acc.setValue(0)
+    rdd2Acc.setValue(0)
+
+    val collectStat = this.parentCtx.args.contains("-reorder")
 
     val localJoinCondition = this.localJoinCondition
 
     val leftParentResult = parentOperators(0).execute(exec)
-      .map(record => (localJoinCondition.value.map(tp => record(tp._1)),record))
+      .map(record => {if(collectStat) rdd1Acc += 1;(localJoinCondition.value.map(tp => record(tp._1)),record)})
       .partitionBy(this.partitioner)
       .persist(this.parentCtx.defaultStorageLevel)
 
 
-
-
-
     val rightParentResult = parentOperators(1).execute(exec)
-      .map(record => (localJoinCondition.value.map(tp => record(tp._2)),record))
+      .map(record => {if(collectStat) rdd2Acc += 1; (localJoinCondition.value.map(tp => record(tp._2)),record)})
       .partitionBy(this.partitioner)
       .persist(this.parentCtx.defaultStorageLevel)
 
@@ -676,7 +686,7 @@ class InnerJoinOperator(parentOp1 : Operator,
         result += (leftTime,rightTime) -> cached((leftTime,rightTime))
       }else{
         val getStat =
-          if(leftTime == exec.getTime && rightTime == exec.getTime)
+          if(collectStat && leftTime == exec.getTime && rightTime == exec.getTime)
             true
           else
             false
@@ -721,29 +731,35 @@ class InnerJoinOperator(parentOp1 : Operator,
 
     val getLocalIdFromGlobalId = this.getLocalIdFromGlobalId
     val outputSchema = this.outputSchema
-
+    val joinAcc = this.joinAcc
 
 
     val joined = leftPartitioned.join(rightPartitioned)
     val result = joined.mapPartitions (it => it.map{pair =>
+      if(getStat) joinAcc += 1
       val combined = pair._2._1 ++ pair._2._2
       outputSchema.getSchemaArray.map(kvp => combined(getLocalIdFromGlobalId.value(kvp._2)))
     }, true
     )
 
 
-    if(getStat && this.parentCtx.args.contains("-reorder")){
-//      leftPartitioned.persist(this.parentCtx.defaultStorageLevel)
-//      rightPartitioned.persist(this.parentCtx.defaultStorageLevel)
-//      result.persist(this.parentCtx.defaultStorageLevel)
 
-
-
-      getSelectivityActor ! (leftPartitioned,rightPartitioned, result)
-    }
+//    if(getStat && this.parentCtx.args.contains("-reorder")){
+//      getSelectivityActor ! (leftPartitioned,rightPartitioned, result)
+//    }
 
 
     result
+  }
+
+  def updateSelectivity {
+    val joinedSize = joinAcc.value
+    val rdd1Size = rdd1Acc.value
+    val rdd2Size = rdd2Acc.value
+    if(rdd1Size > 0 && rdd2Size > 0)
+    {
+      selectivity = joinedSize.toDouble /(rdd1Size * rdd2Size)
+    }
   }
 
 

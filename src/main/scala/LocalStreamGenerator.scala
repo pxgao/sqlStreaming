@@ -59,7 +59,7 @@ class FileStreamQueue (sc : SparkContext, file: String, var secPerBatch : Int  )
 
 
 
-class TwitterStreamQueue (sc : SparkContext, file: String, var recPerBatch : Int  ) extends mutable.Queue[RDD[String]]{
+class FileStreamQueueConstRec (sc : SparkContext, file: String, var recPerBatch : Int  ) extends mutable.Queue[RDD[String]]{
 
   var f = Source.fromFile(file)
 
@@ -79,6 +79,51 @@ class TwitterStreamQueue (sc : SparkContext, file: String, var recPerBatch : Int
       count += 1
     }
     println("TwitterStream: Generated " + records.size + " Records")
+    sc.makeRDD(records, 5)
+  }
+
+  override def size = 1
+
+}
+
+
+class FileStreamQueueLBNL (sc : SparkContext, file: String, var recPerBatch : Int  ) extends mutable.Queue[RDD[String]]{
+
+  var f = Source.fromFile(file)
+
+  var iter = f.getLines()
+
+  override def dequeue() : RDD[String] = {
+    var count = 0
+    var records = ArrayBuffer[String]()
+
+
+    while(count < recPerBatch ){
+      if(!iter.hasNext){
+        f = Source.fromFile(file)
+        iter = f.getLines()
+      }
+      val line = iter.next
+      val newline = line.split(" ").zipWithIndex.map(tp => {
+        val value =
+          if(tp._2 == 3 || tp._2 == 5){
+
+            val splitted = tp._1.split("\\.")
+            if(splitted.size == 5)
+              splitted(0) + "." +splitted(1) + "." +splitted(2) + " " +splitted(3) + "." +splitted(4)
+            else
+              tp._1
+          }
+          else{
+            tp._1
+          }
+        value
+      }).mkString(" ")
+
+      records += newline
+      count += 1
+    }
+    //println("TwitterStream: Generated " + records.size + " Records")
     sc.makeRDD(records, 5)
   }
 
