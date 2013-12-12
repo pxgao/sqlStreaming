@@ -226,7 +226,7 @@ class OperatorGraph(_parentCtx : SqlSparkStreamingContext) extends Logging {
 
   //this should called after pushAllWindows and GroupInnerJoin
   //it is conflict with dynamic reordering
-  def combineJoin = {
+  def incrementalJoin = {
     innerJoinOperators.foreach(joinOperator => {
       joinOperator.parentOperators.zipWithIndex.foreach(tp => {
         val parent = tp._1
